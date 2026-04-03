@@ -1,0 +1,22 @@
+export function KapixMark({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 120 120"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+    >
+      <line x1="28" y1="20" x2="28" y2="100" stroke="#00D4AA" strokeWidth="3.5" strokeLinecap="round" />
+      <line x1="28" y1="60" x2="56" y2="60" stroke="#00D4AA" strokeWidth="3.5" strokeLinecap="round" />
+      <line x1="56" y1="60" x2="88" y2="22" stroke="#00D4AA" strokeWidth="3.5" strokeLinecap="round" />
+      <line x1="56" y1="60" x2="88" y2="98" stroke="#00D4AA" strokeWidth="3.5" strokeLinecap="round" />
+      <circle cx="28" cy="20" r="5" fill="#00D4AA" />
+      <circle cx="28" cy="100" r="5" fill="#00D4AA" />
+      <circle cx="88" cy="22" r="5" fill="#00D4AA" />
+      <circle cx="88" cy="98" r="5" fill="#00D4AA" />
+      <circle cx="56" cy="60" r="7.5" fill="#00D4AA" />
+      <circle cx="56" cy="60" r="3.5" fill="#060A12" />
+      <circle cx="28" cy="60" r="4" fill="#00D4AA" />
+    </svg>
+  );
+}

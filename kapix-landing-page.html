@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kapix — AI-Driven Financial Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=Anybody:wght@300;400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,300;1,6..72,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --emerald:#00D4AA;
+  --emerald-light:#33DFBE;
+  --emerald-dim:rgba(0,212,170,.08);
+  --emerald-glow:rgba(0,212,170,.25);
+  --navy:#060A12;
+  --graphite:#0C1019;
+  --slate:#161C2A;
+  --steel:#1E2538;
+  --blue:#2563EB;
+  --blue-dim:rgba(37,99,235,.10);
+  --silver:#C8CDD8;
+  --mist:#8891A5;
+  --ghost:#4A5268;
+  --border:rgba(255,255,255,.06);
+  --border-hover:rgba(0,212,170,.18);
+  --display:'Anybody',system-ui,sans-serif;
+  --body:'Newsreader',Georgia,serif;
+  --mono:'JetBrains Mono',monospace;
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{background:var(--navy);color:#fff;font-family:var(--body);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button{font-family:var(--display);cursor:pointer;border:none}
+
+/* ─── NOISE + GRID ─── */
+body::after{content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+  background-size:256px 256px}
+.grid-bg{position:fixed;inset:0;z-index:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);
+  background-size:72px 72px;
+  mask-image:radial-gradient(ellipse 80% 60% at 50% 30%,black,transparent)}
+
+/* ─── NAV ─── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 3.5rem;height:72px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(6,10,18,.6);backdrop-filter:blur(28px) saturate(1.5);
+  border-bottom:1px solid var(--border);transition:all .3s}
+.nav-logo{display:flex;align-items:center;gap:.65rem}
+.nav-logo svg{width:30px;height:30px}
+.nav-wordmark{font-family:var(--display);font-weight:700;font-size:1.2rem;letter-spacing:-.02em}
+.nav-mid{display:flex;gap:2.25rem}
+.nav-mid a{font-family:var(--display);font-size:.8rem;font-weight:500;color:var(--mist);
+  letter-spacing:.01em;transition:color .2s;position:relative}
+.nav-mid a:hover{color:#fff}
+.nav-mid a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;
+  background:var(--emerald);transform:scaleX(0);transition:transform .25s;transform-origin:left}
+.nav-mid a:hover::after{transform:scaleX(1)}
+.nav-right{display:flex;align-items:center;gap:1.25rem}
+.nav-login{font-family:var(--display);font-size:.8rem;font-weight:500;color:var(--mist);transition:color .2s}
+.nav-login:hover{color:#fff}
+.nav-cta{font-family:var(--display);font-size:.775rem;font-weight:600;padding:.6rem 1.5rem;
+  border-radius:6px;background:var(--emerald);color:var(--navy);letter-spacing:.02em;transition:all .25s}
+.nav-cta:hover{box-shadow:0 0 28px var(--emerald-glow);transform:translateY(-1px)}
+
+/* ─── HERO ─── */
+.hero{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;padding:8rem 2rem 5rem}
+
+.hero-glow{position:absolute;top:10%;left:50%;transform:translateX(-50%);width:900px;height:700px;
+  background:radial-gradient(ellipse 50% 50%,rgba(0,212,170,.05) 0%,rgba(37,99,235,.03) 40%,transparent 70%);
+  pointer-events:none;filter:blur(50px)}
+
+.hero-badge{display:inline-flex;align-items:center;gap:.5rem;padding:.4rem 1.1rem;border-radius:100px;
+  font-family:var(--mono);font-size:.65rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+  background:var(--emerald-dim);color:var(--emerald);border:1px solid rgba(0,212,170,.12);
+  margin-bottom:2.75rem;animation:fadeUp .7s ease both}
+.hero-dot{width:6px;height:6px;border-radius:50%;background:var(--emerald);animation:blink 2.5s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+.hero h1{font-family:var(--display);font-weight:800;font-size:clamp(3.25rem,8vw,7rem);
+  line-height:.95;letter-spacing:-.04em;max-width:900px;animation:fadeUp .7s ease .08s both}
+.hero h1 .accent{color:var(--emerald);position:relative;display:inline-block}
+.hero h1 .accent::after{content:'';position:absolute;bottom:.08em;left:0;right:0;height:3px;
+  background:var(--emerald);border-radius:2px;opacity:.4}
+
+.hero-sub{font-family:var(--body);font-size:clamp(1.05rem,1.8vw,1.3rem);color:var(--silver);
+  max-width:580px;line-height:1.7;margin-top:2.25rem;font-weight:400;animation:fadeUp .7s ease .16s both}
+
+.hero-actions{display:flex;gap:.875rem;margin-top:3rem;animation:fadeUp .7s ease .24s both}
+.btn-primary{padding:.9rem 2.5rem;border-radius:8px;font-size:.875rem;font-weight:600;
+  background:var(--emerald);color:var(--navy);letter-spacing:.01em;transition:all .25s}
+.btn-primary:hover{box-shadow:0 4px 36px var(--emerald-glow);transform:translateY(-2px)}
+.btn-ghost{padding:.9rem 2.5rem;border-radius:8px;font-size:.875rem;font-weight:500;
+  background:transparent;color:var(--silver);border:1px solid var(--border);transition:all .25s}
+.btn-ghost:hover{border-color:var(--mist);color:#fff;background:rgba(255,255,255,.03)}
+
+.hero-trusted{margin-top:5rem;animation:fadeUp .7s ease .32s both}
+.hero-trusted-label{font-family:var(--mono);font-size:.6rem;color:var(--ghost);letter-spacing:.1em;
+  text-transform:uppercase;margin-bottom:1.5rem}
+.hero-logos{display:flex;align-items:center;justify-content:center;gap:3rem;opacity:.35}
+.hero-logos span{font-family:var(--display);font-weight:700;font-size:1rem;letter-spacing:.02em;color:var(--mist)}
+
+/* ─── SCROLL INDICATOR ─── */
+.scroll-hint{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:.5rem;animation:fadeUp .7s ease .4s both}
+.scroll-line{width:1px;height:40px;background:linear-gradient(transparent,var(--ghost));position:relative;overflow:hidden}
+.scroll-line::after{content:'';position:absolute;top:-100%;left:0;width:1px;height:100%;
+  background:linear-gradient(transparent,var(--emerald));animation:scrollDown 2s ease-in-out infinite}
+@keyframes scrollDown{0%{top:-100%}100%{top:100%}}
+
+/* ─── METRICS STRIP ─── */
+.metrics{position:relative;z-index:1;display:grid;grid-template-columns:repeat(4,1fr);
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  background:rgba(12,16,25,.5);backdrop-filter:blur(16px)}
+.metric{padding:2.75rem 2rem;text-align:center;position:relative}
+.metric:not(:last-child)::after{content:'';position:absolute;right:0;top:20%;bottom:20%;
+  width:1px;background:var(--border)}
+.metric-val{font-family:var(--display);font-size:clamp(2rem,3.5vw,2.75rem);font-weight:700;letter-spacing:-.02em;
+  background:linear-gradient(180deg,#fff 40%,var(--mist));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.metric-label{font-family:var(--mono);font-size:.65rem;color:var(--ghost);margin-top:.4rem;
+  letter-spacing:.08em;text-transform:uppercase;font-weight:500}
+
+/* ─── SECTION SYSTEM ─── */
+section{position:relative;z-index:1}
+.sec{padding:7rem 3.5rem}
+.sec-center{text-align:center}
+.sec-tag{font-family:var(--mono);font-size:.65rem;font-weight:600;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--emerald);display:block;margin-bottom:.75rem}
+.sec-title{font-family:var(--display);font-weight:700;font-size:clamp(2rem,4vw,3rem);
+  letter-spacing:-.025em;line-height:1.1}
+.sec-desc{font-family:var(--body);color:var(--mist);max-width:540px;margin-top:1.1rem;
+  line-height:1.7;font-size:1rem}
+.sec-center .sec-desc{margin-left:auto;margin-right:auto}
+.sec-head{margin-bottom:4rem}
+
+/* ─── CAPABILITIES ─── */
+.cap-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.25rem;max-width:1100px;margin:0 auto}
+.cap-card{background:var(--graphite);border:1px solid var(--border);border-radius:16px;padding:2.5rem;
+  transition:all .4s;position:relative;overflow:hidden}
+.cap-card:hover{border-color:var(--border-hover);transform:translateY(-4px);
+  box-shadow:0 16px 48px rgba(0,0,0,.35)}
+.cap-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--emerald-glow),transparent);opacity:0;transition:opacity .4s}
+.cap-card:hover::before{opacity:1}
+.cap-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.5rem}
+.cap-icon{width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+  background:var(--emerald-dim);border:1px solid rgba(0,212,170,.08)}
+.cap-icon svg{width:24px;height:24px;stroke:var(--emerald);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.cap-num{font-family:var(--mono);font-size:.65rem;color:var(--ghost);letter-spacing:.06em}
+.cap-card h3{font-family:var(--display);font-size:1.15rem;font-weight:600;letter-spacing:-.01em;margin-bottom:.65rem}
+.cap-card p{font-family:var(--body);color:var(--mist);font-size:.925rem;line-height:1.65}
+.cap-tag{display:inline-block;font-family:var(--mono);font-size:.6rem;color:var(--emerald);
+  background:var(--emerald-dim);padding:.25rem .65rem;border-radius:4px;margin-top:1.25rem;
+  letter-spacing:.04em;font-weight:500}
+
+/* ─── HOW IT WORKS ─── */
+.how-section{background:var(--graphite);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.how-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:0;max-width:1100px;margin:0 auto}
+.how-step{padding:2.5rem;position:relative}
+.how-step:not(:last-child)::after{content:'';position:absolute;right:0;top:2.5rem;bottom:2.5rem;
+  width:1px;background:var(--border)}
+.how-step-num{font-family:var(--display);font-size:3rem;font-weight:800;
+  background:linear-gradient(180deg,rgba(0,212,170,.2),transparent);-webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;line-height:1;margin-bottom:1.25rem}
+.how-step h3{font-family:var(--display);font-size:1.05rem;font-weight:600;margin-bottom:.65rem}
+.how-step p{font-family:var(--body);color:var(--mist);font-size:.9rem;line-height:1.65}
+.how-connector{display:flex;align-items:center;gap:.75rem;margin-top:1.25rem}
+.how-dot{width:6px;height:6px;border-radius:50%;background:var(--emerald)}
+.how-line{flex:1;height:1px;background:linear-gradient(90deg,var(--emerald),transparent)}
+
+/* ─── INTELLIGENCE SECTION ─── */
+.intel{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1.1fr;gap:5rem;align-items:center}
+.intel-text .sec-desc{margin-top:1.25rem}
+.intel-stats{display:flex;gap:3rem;margin-top:2.5rem}
+.intel-stat-val{font-family:var(--display);font-size:2rem;font-weight:700;color:var(--emerald)}
+.intel-stat-label{font-family:var(--mono);font-size:.65rem;color:var(--ghost);margin-top:.25rem;
+  letter-spacing:.06em;text-transform:uppercase;font-weight:500}
+
+/* Dashboard Preview */
+.dash-preview{background:var(--graphite);border:1px solid var(--border);border-radius:18px;
+  overflow:hidden;position:relative}
+.dash-bar{display:flex;align-items:center;gap:.5rem;padding:.85rem 1.25rem;
+  border-bottom:1px solid var(--border);background:var(--slate)}
+.dash-dot{width:8px;height:8px;border-radius:50%}
+.dash-title{font-family:var(--mono);font-size:.6rem;color:var(--ghost);letter-spacing:.04em;margin-left:.75rem}
+.dash-body{padding:1.5rem;display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.dash-card{background:var(--slate);border-radius:10px;padding:1.25rem;border:1px solid var(--border)}
+.dash-card-label{font-family:var(--mono);font-size:.55rem;color:var(--ghost);letter-spacing:.06em;
+  text-transform:uppercase;margin-bottom:.5rem;font-weight:600}
+.dash-card-val{font-family:var(--display);font-size:1.6rem;font-weight:700}
+.dash-card-change{font-family:var(--mono);font-size:.6rem;margin-top:.2rem;font-weight:500}
+.dash-card-change.up{color:var(--emerald)}
+.dash-card-change.down{color:#ef4444}
+
+/* Mini chart */
+.mini-chart{display:flex;align-items:flex-end;gap:3px;height:40px;margin-top:.75rem}
+.mini-bar{flex:1;border-radius:2px 2px 0 0;transition:height .3s}
+
+/* Wide data row */
+.dash-wide{grid-column:1/-1;background:var(--slate);border-radius:10px;padding:1.25rem;
+  border:1px solid var(--border)}
+.dash-wide-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+.spark-line{height:32px;position:relative}
+.spark-line svg{width:100%;height:100%}
+
+/* ─── TEAM ─── */
+.team-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.25rem;max-width:960px;margin:0 auto}
+.team-card{background:var(--graphite);border:1px solid var(--border);border-radius:14px;
+  padding:2.5rem 1.5rem;text-align:center;transition:all .3s;position:relative;overflow:hidden}
+.team-card:hover{border-color:var(--border-hover);transform:translateY(-3px)}
+.team-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--emerald),var(--blue));opacity:0;transition:opacity .3s}
+.team-card:hover::after{opacity:1}
+.team-avatar{width:68px;height:68px;border-radius:50%;margin:0 auto 1.25rem;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--display);font-size:1.15rem;font-weight:700;color:var(--emerald);letter-spacing:.02em;
+  background:var(--emerald-dim);border:2px solid rgba(0,212,170,.12)}
+.team-name{font-family:var(--display);font-size:.95rem;font-weight:600}
+.team-role{font-family:var(--body);font-size:.8rem;color:var(--mist);margin-top:.3rem}
+
+/* ─── ARCHITECTURE / TECH ─── */
+.arch-section{background:var(--graphite);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.arch-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;max-width:1100px;margin:0 auto;
+  border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.arch-item{padding:2.25rem;border-right:1px solid var(--border);border-bottom:1px solid var(--border);
+  transition:background .3s}
+.arch-item:nth-child(3n){border-right:none}
+.arch-item:nth-child(n+4){border-bottom:none}
+.arch-item:hover{background:var(--slate)}
+.arch-icon{font-family:var(--mono);font-size:1.5rem;margin-bottom:1rem;display:block}
+.arch-item h4{font-family:var(--display);font-size:.95rem;font-weight:600;margin-bottom:.4rem}
+.arch-item p{font-family:var(--body);font-size:.825rem;color:var(--mist);line-height:1.55}
+
+/* ─── TESTIMONIAL / PROOF ─── */
+.proof-section{border-bottom:1px solid var(--border)}
+.proof-content{max-width:800px;margin:0 auto;text-align:center}
+.proof-quote{font-family:var(--body);font-style:italic;font-size:clamp(1.25rem,2.5vw,1.75rem);
+  line-height:1.6;color:var(--silver);position:relative}
+.proof-quote::before{content:'"';font-family:var(--display);font-size:5rem;font-weight:800;
+  color:var(--emerald);opacity:.2;position:absolute;top:-.5rem;left:-2rem;line-height:1}
+.proof-attr{margin-top:2rem;display:flex;align-items:center;justify-content:center;gap:.75rem}
+.proof-line{width:32px;height:1px;background:var(--emerald)}
+.proof-name{font-family:var(--display);font-size:.85rem;font-weight:600;color:var(--silver)}
+.proof-role{font-family:var(--mono);font-size:.65rem;color:var(--ghost);letter-spacing:.04em}
+
+/* ─── FAQ ─── */
+.faq-list{max-width:720px;margin:0 auto}
+.faq-item{border-bottom:1px solid var(--border);padding:1.75rem 0}
+.faq-q{font-family:var(--display);font-size:1.05rem;font-weight:600;cursor:pointer;
+  display:flex;justify-content:space-between;align-items:center;transition:color .2s}
+.faq-q:hover{color:var(--emerald)}
+.faq-q::after{content:'+';font-size:1.25rem;font-weight:300;color:var(--ghost);transition:all .3s}
+.faq-item.open .faq-q::after{content:'−';color:var(--emerald)}
+.faq-a{font-family:var(--body);color:var(--mist);line-height:1.7;font-size:.925rem;
+  max-height:0;overflow:hidden;transition:all .4s ease;padding-top:0}
+.faq-item.open .faq-a{max-height:200px;padding-top:1rem}
+
+/* ─── CTA ─── */
+.cta-section{text-align:center;position:relative;overflow:hidden}
+.cta-glow{position:absolute;top:0;left:50%;transform:translateX(-50%);width:700px;height:500px;
+  background:radial-gradient(ellipse,rgba(0,212,170,.06),rgba(37,99,235,.03) 50%,transparent 70%);
+  filter:blur(60px);pointer-events:none}
+.cta-section h2{font-family:var(--display);font-weight:700;font-size:clamp(2.25rem,5vw,3.5rem);
+  letter-spacing:-.03em;line-height:1.05;position:relative}
+.cta-section h2 .accent{color:var(--emerald)}
+.cta-section p{font-family:var(--body);color:var(--mist);max-width:480px;margin:1.25rem auto 0;
+  line-height:1.7;font-size:1rem;position:relative}
+.cta-section .btn-primary{margin-top:2.5rem;position:relative;padding:1rem 3rem;font-size:.95rem}
+.cta-badge{display:inline-flex;align-items:center;gap:.4rem;margin-top:1.5rem;
+  font-family:var(--mono);font-size:.65rem;color:var(--ghost);letter-spacing:.04em;position:relative}
+.cta-badge::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--emerald)}
+
+/* ─── FOOTER ─── */
+footer{border-top:1px solid var(--border);position:relative;z-index:1}
+.footer-main{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:3rem;
+  max-width:1100px;margin:0 auto;padding:4rem 3.5rem 3rem}
+.footer-brand p{font-family:var(--body);color:var(--ghost);font-size:.85rem;line-height:1.6;
+  margin-top:1rem;max-width:280px}
+.footer-col h4{font-family:var(--display);font-size:.8rem;font-weight:600;letter-spacing:.04em;
+  color:var(--mist);margin-bottom:1.25rem}
+.footer-col a{display:block;font-family:var(--body);font-size:.85rem;color:var(--ghost);
+  padding:.3rem 0;transition:color .2s}
+.footer-col a:hover{color:var(--emerald)}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;
+  max-width:1100px;margin:0 auto;padding:1.5rem 3.5rem;border-top:1px solid var(--border);
+  font-family:var(--mono);font-size:.65rem;color:var(--ghost);letter-spacing:.03em}
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+.anim{opacity:0;transform:translateY(28px);transition:opacity .65s ease,transform .65s ease}
+.anim.vis{opacity:1;transform:translateY(0)}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:1024px){
+  .sec{padding:5rem 2rem}
+  .cap-grid{grid-template-columns:1fr}
+  .intel{grid-template-columns:1fr;gap:3rem}
+  .how-steps{grid-template-columns:1fr;gap:0}
+  .how-step:not(:last-child)::after{display:none}
+  .how-step{border-bottom:1px solid var(--border)}
+  .arch-grid{grid-template-columns:1fr 1fr}
+  .arch-item:nth-child(2n){border-right:none}
+  .footer-main{grid-template-columns:1fr 1fr}
+}
+@media(max-width:768px){
+  nav{padding:0 1.5rem}
+  .nav-mid{display:none}
+  .nav-login{display:none}
+  .hero{padding:7rem 1.5rem 4rem}
+  .metrics{grid-template-columns:repeat(2,1fr)}
+  .metric:nth-child(2)::after{display:none}
+  .team-grid{grid-template-columns:repeat(2,1fr)}
+  .arch-grid{grid-template-columns:1fr}
+  .arch-item{border-right:none!important;border-bottom:1px solid var(--border)!important}
+  .arch-item:last-child{border-bottom:none!important}
+  .hero-actions{flex-direction:column;align-items:center;width:100%}
+  .hero-actions button{width:100%;max-width:320px}
+  .footer-main{grid-template-columns:1fr;gap:2rem}
+}
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+
+<!-- ═══════════ NAV ═══════════ -->
+<nav>
+  <a href="#" class="nav-logo">
+    <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="28" y1="20" x2="28" y2="100" stroke="#00D4AA" stroke-width="3.5" stroke-linecap="round"/>
+      <line x1="28" y1="60" x2="56" y2="60" stroke="#00D4AA" stroke-width="3.5" stroke-linecap="round"/>
+      <line x1="56" y1="60" x2="88" y2="22" stroke="#00D4AA" stroke-width="3.5" stroke-linecap="round"/>
+      <line x1="56" y1="60" x2="88" y2="98" stroke="#00D4AA" stroke-width="3.5" stroke-linecap="round"/>
+      <circle cx="28" cy="20" r="5" fill="#00D4AA"/>
+      <circle cx="28" cy="100" r="5" fill="#00D4AA"/>
+      <circle cx="88" cy="22" r="5" fill="#00D4AA"/>
+      <circle cx="88" cy="98" r="5" fill="#00D4AA"/>
+      <circle cx="56" cy="60" r="7.5" fill="#00D4AA"/>
+      <circle cx="56" cy="60" r="3.5" fill="#060A12"/>
+      <circle cx="28" cy="60" r="4" fill="#00D4AA"/>
+    </svg>
+    <span class="nav-wordmark">Kapix</span>
+  </a>
+  <div class="nav-mid">
+    <a href="#platform">Platform</a>
+    <a href="#intelligence">Intelligence</a>
+    <a href="#architecture">Architecture</a>
+    <a href="#team">Team</a>
+  </div>
+  <div class="nav-right">
+    <a href="#" class="nav-login">Log In</a>
+    <a href="#contact" class="nav-cta">Get Started</a>
+  </div>
+</nav>
+
+<!-- ═══════════ HERO ═══════════ -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-badge"><span class="hero-dot"></span>AI-Powered Financial Intelligence</div>
+  <h1>AI that <span class="accent">sees</span><br>ahead.</h1>
+  <p class="hero-sub">Real-time credit scoring, risk assessment, fraud detection, and decision automation — engineered for the world's most demanding financial institutions.</p>
+  <div class="hero-actions">
+    <button class="btn-primary">Explore the Platform</button>
+    <button class="btn-ghost">Read Documentation</button>
+  </div>
+  <div class="hero-trusted">
+    <div class="hero-trusted-label">Trusted by forward-thinking institutions</div>
+    <div class="hero-logos">
+      <span>Apex Capital</span><span>NovaBank</span><span>Meridian Finance</span><span>ArkVentures</span>
+    </div>
+  </div>
+  <div class="scroll-hint"><div class="scroll-line"></div></div>
+</section>
+
+<!-- ═══════════ METRICS ═══════════ -->
+<div class="metrics">
+  <div class="metric">
+    <div class="metric-val">12ms</div>
+    <div class="metric-label">Avg Decision Latency</div>
+  </div>
+  <div class="metric">
+    <div class="metric-val">99.97%</div>
+    <div class="metric-label">Uptime SLA</div>
+  </div>
+  <div class="metric">
+    <div class="metric-val">2.4B+</div>
+    <div class="metric-label">Transactions Scored</div>
+  </div>
+  <div class="metric">
+    <div class="metric-val">94.6%</div>
+    <div class="metric-label">Fraud Detection Rate</div>
+  </div>
+</div>
+
+<!-- ═══════════ CAPABILITIES ═══════════ -->
+<section id="platform" class="sec sec-center">
+  <div class="sec-head">
+    <span class="sec-tag">Core Platform</span>
+    <h2 class="sec-title">Built by experts.<br>Powered by precision.</h2>
+    <p class="sec-desc">Enterprise-grade AI systems that transform raw financial data into real-time, high-confidence decisions at scale.</p>
+  </div>
+  <div class="cap-grid">
+    <div class="cap-card anim">
+      <div class="cap-top">
+        <div class="cap-icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+        <span class="cap-num">01</span>
+      </div>
+      <h3>Real-Time Credit Scoring</h3>
+      <p>Continuous credit assessment powered by multi-dimensional data fusion. Score any entity — individual, SME, or corporate — in milliseconds with fully explainable AI outputs and regulatory-compliant audit trails.</p>
+      <span class="cap-tag">12ms avg response</span>
+    </div>
+    <div class="cap-card anim">
+      <div class="cap-top">
+        <div class="cap-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <span class="cap-num">02</span>
+      </div>
+      <h3>Fraud Detection &amp; Prevention</h3>
+      <p>Adaptive neural networks that identify anomalous patterns across transaction streams in real time. Multi-layered detection catches threats before they materialise — reducing false positives by 73% over rule-based systems.</p>
+      <span class="cap-tag">94.6% detection rate</span>
+    </div>
+    <div class="cap-card anim">
+      <div class="cap-top">
+        <div class="cap-icon"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 11-6.219-8.56"/><path d="M22 3L12 13l-3-3"/></svg></div>
+        <span class="cap-num">03</span>
+      </div>
+      <h3>Dynamic Risk Assessment</h3>
+      <p>Quantify, decompose, and monitor portfolio risk in real time. Dynamic models adjust to market shifts, counterparty changes, and macro-economic signals — providing continuous risk surfaces rather than static snapshots.</p>
+      <span class="cap-tag">Continuous monitoring</span>
+    </div>
+    <div class="cap-card anim">
+      <div class="cap-top">
+        <div class="cap-icon"><svg viewBox="0 0 24 24"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg></div>
+        <span class="cap-num">04</span>
+      </div>
+      <h3>Decision Automation</h3>
+      <p>Configurable decision engines that automate complex workflows — from loan origination to regulatory compliance to portfolio rebalancing. Every decision comes with a full audit trail, confidence score, and override capability.</p>
+      <span class="cap-tag">Zero manual bottlenecks</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ HOW IT WORKS ═══════════ -->
+<section class="how-section sec">
+  <div class="sec-head sec-center">
+    <span class="sec-tag">How It Works</span>
+    <h2 class="sec-title">From data to decision<br>in milliseconds.</h2>
+  </div>
+  <div class="how-steps">
+    <div class="how-step anim">
+      <div class="how-step-num">01</div>
+      <h3>Ingest &amp; Normalise</h3>
+      <p>Connect any data source — transaction feeds, credit bureaus, market data, alternative data signals. Kapix normalises and enriches incoming data in real time through our unified data layer.</p>
+      <div class="how-connector"><div class="how-dot"></div><div class="how-line"></div></div>
+    </div>
+    <div class="how-step anim">
+      <div class="how-step-num">02</div>
+      <h3>Analyse &amp; Score</h3>
+      <p>Proprietary AI models evaluate hundreds of dimensions simultaneously — credit risk, fraud probability, compliance flags, market exposure. Every score includes an explanation vector for full transparency.</p>
+      <div class="how-connector"><div class="how-dot"></div><div class="how-line"></div></div>
+    </div>
+    <div class="how-step anim">
+      <div class="how-step-num">03</div>
+      <h3>Decide &amp; Act</h3>
+      <p>Configurable decision rules execute instantly based on model outputs. Approve, decline, escalate, or route — with full audit trails. Your business logic, powered by our intelligence layer.</p>
+      <div class="how-connector"><div class="how-dot"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ INTELLIGENCE ═══════════ -->
+<section id="intelligence" class="sec">
+  <div class="intel">
+    <div class="intel-text anim">
+      <span class="sec-tag">Intelligence Layer</span>
+      <h2 class="sec-title">Financial intelligence for the world's most <span style="color:var(--emerald)">demanding</span> decisions.</h2>
+      <p class="sec-desc">Kapix processes billions of data signals through proprietary AI models — delivering actionable intelligence with latency measured in milliseconds, not minutes. Our platform is engineered for enterprises that cannot afford to wait.</p>
+      <div class="intel-stats">
+        <div>
+          <div class="intel-stat-val">47×</div>
+          <div class="intel-stat-label">Faster Than Legacy</div>
+        </div>
+        <div>
+          <div class="intel-stat-val">3.2M</div>
+          <div class="intel-stat-label">Models Deployed</div>
+        </div>
+        <div>
+          <div class="intel-stat-val">186</div>
+          <div class="intel-stat-label">Data Dimensions</div>
+        </div>
+      </div>
+    </div>
+    <div class="dash-preview anim">
+      <div class="dash-bar">
+        <div class="dash-dot" style="background:#ef4444"></div>
+        <div class="dash-dot" style="background:#f59e0b"></div>
+        <div class="dash-dot" style="background:#10b981"></div>
+        <span class="dash-title">Kapix Intelligence Dashboard</span>
+      </div>
+      <div class="dash-body">
+        <div class="dash-card">
+          <div class="dash-card-label">Risk Score</div>
+          <div class="dash-card-val" style="color:var(--emerald)">0.023</div>
+          <div class="dash-card-change up">▼ Low Exposure</div>
+        </div>
+        <div class="dash-card">
+          <div class="dash-card-label">Throughput</div>
+          <div class="dash-card-val">84K<span style="font-size:.8rem;color:var(--mist)">/sec</span></div>
+          <div class="dash-card-change up">▲ 12.4% vs baseline</div>
+        </div>
+        <div class="dash-card">
+          <div class="dash-card-label">Fraud Alerts</div>
+          <div class="dash-card-val">7</div>
+          <div class="dash-card-change down">▲ 2 flagged for review</div>
+          <div class="mini-chart" id="fraudChart"></div>
+        </div>
+        <div class="dash-card">
+          <div class="dash-card-label">Model Accuracy</div>
+          <div class="dash-card-val">98.2<span style="font-size:.8rem;color:var(--mist)">%</span></div>
+          <div class="dash-card-change up">▲ 0.3% vs last week</div>
+          <div class="mini-chart" id="accChart"></div>
+        </div>
+        <div class="dash-wide">
+          <div class="dash-wide-header">
+            <span class="dash-card-label">Transaction Volume — Last 24h</span>
+            <span style="font-family:var(--mono);font-size:.6rem;color:var(--emerald)">LIVE</span>
+          </div>
+          <div class="spark-line">
+            <svg viewBox="0 0 400 32" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="sg" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#00D4AA" stop-opacity=".25"/>
+                  <stop offset="100%" stop-color="#00D4AA" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <path d="M0,24 L20,20 L40,22 L60,16 L80,18 L100,12 L120,14 L140,8 L160,10 L180,6 L200,9 L220,4 L240,7 L260,10 L280,6 L300,8 L320,3 L340,5 L360,2 L380,4 L400,1" fill="none" stroke="#00D4AA" stroke-width="1.5"/>
+              <path d="M0,24 L20,20 L40,22 L60,16 L80,18 L100,12 L120,14 L140,8 L160,10 L180,6 L200,9 L220,4 L240,7 L260,10 L280,6 L300,8 L320,3 L340,5 L360,2 L380,4 L400,1 L400,32 L0,32 Z" fill="url(#sg)"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ ARCHITECTURE ═══════════ -->
+<section id="architecture" class="arch-section sec">
+  <div class="sec-head sec-center">
+    <span class="sec-tag">Technical Architecture</span>
+    <h2 class="sec-title">Engineered for the<br>highest demands.</h2>
+    <p class="sec-desc">Every layer of the Kapix stack is purpose-built for financial-grade performance, security, and compliance.</p>
+  </div>
+  <div class="arch-grid">
+    <div class="arch-item anim">
+      <span class="arch-icon">⚡</span>
+      <h4>Sub-15ms Latency</h4>
+      <p>Edge-deployed inference engines deliver decisions faster than network round-trip times.</p>
+    </div>
+    <div class="arch-item anim">
+      <span class="arch-icon">🔐</span>
+      <h4>Bank-Grade Security</h4>
+      <p>End-to-end encryption, SOC 2 Type II compliant, with zero-trust architecture throughout.</p>
+    </div>
+    <div class="arch-item anim">
+      <span class="arch-icon">📊</span>
+      <h4>Explainable AI</h4>
+      <p>Every decision includes feature attribution and confidence intervals. No black boxes.</p>
+    </div>
+    <div class="arch-item anim">
+      <span class="arch-icon">🌐</span>
+      <h4>Multi-Region Deploy</h4>
+      <p>Deploy across AWS, GCP, or on-premise. Data residency controls for every jurisdiction.</p>
+    </div>
+    <div class="arch-item anim">
+      <span class="arch-icon">🔄</span>
+      <h4>Continuous Learning</h4>
+      <p>Models retrain on live data with human-in-the-loop validation and automated drift detection.</p>
+    </div>
+    <div class="arch-item anim">
+      <span class="arch-icon">🔌</span>
+      <h4>API-First Design</h4>
+      <p>RESTful and gRPC APIs with SDKs in Python, Node, Go, and Java. Integrate in hours, not months.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ PROOF ═══════════ -->
+<section class="proof-section sec">
+  <div class="proof-content anim">
+    <div class="proof-quote">Decisions in milliseconds. Confidence in every one. Kapix represents the next generation of financial intelligence — built not to impress, but to perform.</div>
+    <div class="proof-attr">
+      <div class="proof-line"></div>
+      <div>
+        <div class="proof-name">Kapix Engineering Team</div>
+        <div class="proof-role">Founding Vision Statement</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ TEAM ═══════════ -->
+<section id="team" class="sec sec-center">
+  <div class="sec-head">
+    <span class="sec-tag">Leadership</span>
+    <h2 class="sec-title">The team behind<br>the engine.</h2>
+    <p class="sec-desc">Deep expertise across AI research, quantitative finance, and enterprise systems engineering. Finance minds. AI engineers. One mission.</p>
+  </div>
+  <div class="team-grid">
+    <div class="team-card anim">
+      <div class="team-avatar">UA</div>
+      <div class="team-name">Ugbefu Andrew</div>
+      <div class="team-role">Chief Executive Officer</div>
+    </div>
+    <div class="team-card anim">
+      <div class="team-avatar">CO</div>
+      <div class="team-name">Chris Oji</div>
+      <div class="team-role">Co-Founder</div>
+    </div>
+    <div class="team-card anim">
+      <div class="team-avatar">SA</div>
+      <div class="team-name">Sharon Adima</div>
+      <div class="team-role">Co-Founder</div>
+    </div>
+    <div class="team-card anim">
+      <div class="team-avatar">FO</div>
+      <div class="team-name">Faith Obi</div>
+      <div class="team-role">Co-Founder</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ FAQ ═══════════ -->
+<section class="sec sec-center" style="border-top:1px solid var(--border)">
+  <div class="sec-head">
+    <span class="sec-tag">Questions</span>
+    <h2 class="sec-title">Frequently asked.</h2>
+  </div>
+  <div class="faq-list">
+    <div class="faq-item">
+      <div class="faq-q">What types of financial institutions can use Kapix?</div>
+      <div class="faq-a">Kapix is designed for banks, fintechs, insurance companies, investment firms, and any organisation that makes high-volume financial decisions. Our platform scales from startup to enterprise with the same performance guarantees.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How quickly can Kapix be integrated?</div>
+      <div class="faq-a">Most integrations go live within 2–4 weeks. Our API-first architecture and pre-built SDKs in Python, Node, Go, and Java mean your engineering team can connect in hours. The remaining time is spent on model calibration and business rule configuration.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Is Kapix compliant with financial regulations?</div>
+      <div class="faq-a">Yes. Kapix is built with regulatory compliance at its core. We support GDPR, PCI DSS, and local data residency requirements. Every AI decision includes a full explainability report for audit purposes.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What makes Kapix different from legacy risk platforms?</div>
+      <div class="faq-a">Legacy platforms rely on static rules and batch processing. Kapix uses adaptive AI that learns continuously from live data — delivering decisions 47× faster with higher accuracy. Our models evaluate 186 dimensions per transaction versus the industry average of 12–15.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ CTA ═══════════ -->
+<section id="contact" class="cta-section sec">
+  <div class="cta-glow"></div>
+  <h2>Ready to see what<br><span class="accent">precision</span> looks like?</h2>
+  <p>Join the institutions that trust Kapix for their most critical financial decisions.</p>
+  <button class="btn-primary">Request a Demo</button>
+  <div class="cta-badge">No commitment required — see it in action first</div>
+</section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer>
+  <div class="footer-main">
+    <div class="footer-brand">
+      <div style="display:flex;align-items:center;gap:.6rem">
+        <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24">
+          <line x1="28" y1="20" x2="28" y2="100" stroke="#00D4AA" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="28" y1="60" x2="56" y2="60" stroke="#00D4AA" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="56" y1="60" x2="88" y2="22" stroke="#00D4AA" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="56" y1="60" x2="88" y2="98" stroke="#00D4AA" stroke-width="3.5" stroke-linecap="round"/>
+          <circle cx="56" cy="60" r="7.5" fill="#00D4AA"/><circle cx="56" cy="60" r="3.5" fill="#060A12"/>
+        </svg>
+        <span style="font-family:var(--display);font-weight:700;font-size:1.1rem">Kapix</span>
+      </div>
+      <p>AI-driven financial intelligence for the world's most demanding decisions. Built by experts. Powered by precision.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Platform</h4>
+      <a href="#">Credit Scoring</a>
+      <a href="#">Fraud Detection</a>
+      <a href="#">Risk Assessment</a>
+      <a href="#">Decision Automation</a>
+      <a href="#">API Reference</a>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <a href="#">About</a>
+      <a href="#">Team</a>
+      <a href="#">Careers</a>
+      <a href="#">Blog</a>
+      <a href="#">Press</a>
+    </div>
+    <div class="footer-col">
+      <h4>Resources</h4>
+      <a href="#">Documentation</a>
+      <a href="#">Security</a>
+      <a href="#">Compliance</a>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Kapix Technologies. All rights reserved.</span>
+    <span>Lagos, Nigeria — Built for the world.</span>
+  </div>
+</footer>
+
+<script>
+// ─── Scroll animations ───
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('vis'), i * 60);
+      obs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.anim').forEach(el => obs.observe(el));
+
+// ─── FAQ toggle ───
+document.querySelectorAll('.faq-q').forEach(q => {
+  q.addEventListener('click', () => {
+    const item = q.parentElement;
+    document.querySelectorAll('.faq-item').forEach(i => { if (i !== item) i.classList.remove('open') });
+    item.classList.toggle('open');
+  });
+});
+
+// ─── Mini charts ───
+function miniChart(id, data, color) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  data.forEach((h, i) => {
+    const bar = document.createElement('div');
+    bar.className = 'mini-bar';
+    bar.style.height = h + '%';
+    bar.style.background = color;
+    bar.style.opacity = 0.4 + (i / data.length) * 0.6;
+    el.appendChild(bar);
+  });
+}
+miniChart('fraudChart', [30,45,20,60,35,50,25,70,40,55,30,80], '#ef4444');
+miniChart('accChart', [60,65,62,68,70,72,74,76,75,80,82,85], '#00D4AA');
+
+// ─── Parallax hero glow ───
+document.addEventListener('mousemove', (e) => {
+  const g = document.querySelector('.hero-glow');
+  if (!g) return;
+  const x = (e.clientX / window.innerWidth - 0.5) * 40;
+  const y = (e.clientY / window.innerHeight - 0.5) * 25;
+  g.style.transform = `translateX(calc(-50% + ${x}px)) translateY(${y}px)`;
+});
+
+// ─── Nav scroll effect ───
+let lastScroll = 0;
+window.addEventListener('scroll', () => {
+  const nav = document.querySelector('nav');
+  const scrollY = window.scrollY;
+  if (scrollY > 100) {
+    nav.style.background = 'rgba(6,10,18,.88)';
+    nav.style.borderBottomColor = 'rgba(255,255,255,.06)';
+  } else {
+    nav.style.background = 'rgba(6,10,18,.6)';
+  }
+  lastScroll = scrollY;
+});
+</script>
+
+</body>
+</html>

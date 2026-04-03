@@ -1,26 +1,123 @@
 @import "tailwindcss";
 
+/* ─── Dark mode via next-themes class strategy ─── */
+@variant dark (&:where(.dark, .dark *));
+
+/* ─── Brand Tokens ─── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Kapix Colors */
+  --kapix-emerald: #00D4AA;
+  --kapix-emerald-light: #33DFBE;
+  --kapix-emerald-dim: rgba(0, 212, 170, 0.08);
+  --kapix-emerald-glow: rgba(0, 212, 170, 0.25);
+  --kapix-navy: #060A12;
+  --kapix-graphite: #0C1019;
+  --kapix-slate: #161C2A;
+  --kapix-steel: #1E2538;
+  --kapix-blue: #2563EB;
+  --kapix-blue-dim: rgba(37, 99, 235, 0.10);
+  --kapix-silver: #C8CDD8;
+  --kapix-mist: #8891A5;
+  --kapix-ghost: #4A5268;
+  --kapix-border: rgba(255, 255, 255, 0.06);
+  --kapix-border-hover: rgba(0, 212, 170, 0.18);
+
+  /* Light mode surfaces */
+  --background: #F5F7FA;
+  --foreground: #060A12;
+  --surface: #FFFFFF;
+  --surface-2: #EEF1F7;
+  --border-color: #DDE0E8;
+  --muted: #8891A5;
 }
 
+.dark {
+  --background: #060A12;
+  --foreground: #FFFFFF;
+  --surface: #0C1019;
+  --surface-2: #161C2A;
+  --border-color: rgba(255, 255, 255, 0.06);
+  --muted: #8891A5;
+}
+
+/* ─── Tailwind Theme ─── */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border-color);
+  --color-muted: var(--muted);
+  --color-emerald: var(--kapix-emerald);
+  --color-emerald-dim: var(--kapix-emerald-dim);
+  --color-emerald-glow: var(--kapix-emerald-glow);
+  --color-navy: var(--kapix-navy);
+  --color-graphite: var(--kapix-graphite);
+  --color-slate-dark: var(--kapix-slate);
+  --color-steel: var(--kapix-steel);
+  --color-silver: var(--kapix-silver);
+  --color-ghost: var(--kapix-ghost);
+  --font-display: var(--font-anybody);
+  --font-body: var(--font-newsreader);
+  --font-code: var(--font-jetbrains);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-newsreader), Georgia, serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ─── Noise texture overlay ─── */
+.noise-overlay::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
+}
+
+/* ─── Grid background ─── */
+.grid-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background-image:
+    linear-gradient(var(--border-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border-color) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black, transparent);
+  pointer-events: none;
+}
+
+/* ─── Animations ─── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+
+@keyframes scrollDown {
+  0%   { top: -100%; }
+  100% { top: 100%; }
+}
+
+.anim-fade-up {
+  animation: fadeUp 0.7s ease both;
+}
+
+.hero-dot {
+  animation: blink 2.5s ease-in-out infinite;
 }

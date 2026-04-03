@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kapix — Brand Design System v1.0</title>
+<link href="https://fonts.googleapis.com/css2?family=Anybody:wght@300;400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,300;1,6..72,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --kapix-emerald:#00D4AA;
+  --kapix-emerald-light:#33DFBE;
+  --kapix-emerald-dim:rgba(0,212,170,.10);
+  --kapix-emerald-glow:rgba(0,212,170,.25);
+  --kapix-navy:#060A12;
+  --kapix-graphite:#0C1019;
+  --kapix-slate:#161C2A;
+  --kapix-steel:#1E2538;
+  --kapix-blue:#2563EB;
+  --kapix-blue-light:#4B83F0;
+  --kapix-blue-dim:rgba(37,99,235,.12);
+  --kapix-silver:#C8CDD8;
+  --kapix-mist:#8891A5;
+  --kapix-ghost:#4A5268;
+  --white:#FFFFFF;
+  --font-display:'Anybody',system-ui,sans-serif;
+  --font-body:'Newsreader',Georgia,serif;
+  --font-mono:'JetBrains Mono',monospace;
+}
+
+html{font-size:16px;scroll-behavior:smooth}
+body{background:#FAFBFC;color:#1a1a2e;font-family:var(--font-body);line-height:1.6;-webkit-font-smoothing:antialiased}
+
+/* ─── COVER PAGE ─── */
+.cover{min-height:100vh;background:var(--kapix-navy);color:var(--white);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden;padding:3rem}
+
+.cover::before{content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 60% 40% at 30% 60%,rgba(0,212,170,.06),transparent),
+    radial-gradient(ellipse 50% 50% at 70% 30%,rgba(37,99,235,.05),transparent);
+  pointer-events:none}
+
+.cover-grid{position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+  background-size:64px 64px;
+  mask-image:radial-gradient(ellipse 80% 60% at 50% 50%,black 20%,transparent 70%)}
+
+.cover-logo{position:relative;margin-bottom:3rem}
+.cover-logo svg{width:100px;height:100px}
+
+.cover h1{font-family:var(--font-display);font-weight:700;font-size:3.5rem;letter-spacing:-.03em;
+  line-height:1.1;position:relative}
+.cover .subtitle{font-family:var(--font-display);font-weight:300;font-size:1.1rem;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--kapix-mist);margin-top:1.5rem;position:relative}
+.cover .version{position:absolute;bottom:3rem;font-family:var(--font-mono);font-size:.75rem;
+  color:var(--kapix-ghost);letter-spacing:.05em}
+
+/* ─── PAGE LAYOUT ─── */
+.page{max-width:1100px;margin:0 auto;padding:5rem 3rem}
+.page-dark{background:var(--kapix-navy);color:var(--white)}
+.page-slate{background:var(--kapix-graphite);color:var(--white)}
+.page-full{max-width:none;padding:5rem}
+
+.divider{height:1px;background:linear-gradient(90deg,transparent,#dde0e8 20%,#dde0e8 80%,transparent);margin:0}
+.divider-dark{background:linear-gradient(90deg,transparent,rgba(255,255,255,.08) 20%,rgba(255,255,255,.08) 80%,transparent)}
+
+/* ─── SECTION HEADERS ─── */
+.sh{margin-bottom:3.5rem}
+.sh-num{font-family:var(--font-mono);font-size:.7rem;font-weight:600;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--kapix-emerald);margin-bottom:.75rem;display:block}
+.sh h2{font-family:var(--font-display);font-weight:700;font-size:2.25rem;letter-spacing:-.02em;line-height:1.15}
+.sh p{color:var(--kapix-mist);margin-top:.75rem;max-width:600px;font-size:1rem;line-height:1.7}
+.page-dark .sh p{color:var(--kapix-mist)}
+
+/* ─── LOGO SECTION ─── */
+.logo-showcase{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-bottom:3rem}
+.logo-box{border-radius:16px;padding:3.5rem;display:flex;align-items:center;justify-content:center;
+  min-height:280px;position:relative;border:1px solid}
+.logo-box.dark{background:var(--kapix-navy);border-color:var(--kapix-steel)}
+.logo-box.light{background:#FFFFFF;border-color:#e2e5ec}
+.logo-box.emerald{background:var(--kapix-emerald);border-color:var(--kapix-emerald)}
+.logo-box.slate{background:var(--kapix-slate);border-color:var(--kapix-steel)}
+
+.logo-box svg{width:220px;height:auto}
+.logo-box-label{position:absolute;bottom:1rem;left:1.25rem;font-family:var(--font-mono);
+  font-size:.65rem;letter-spacing:.06em;text-transform:uppercase;opacity:.5}
+
+/* Logo construction */
+.logo-construction{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2rem;margin:3rem 0}
+.lc-item{text-align:center}
+.lc-item svg{width:140px;height:140px;margin-bottom:1rem}
+.lc-item p{font-family:var(--font-mono);font-size:.75rem;color:var(--kapix-mist);letter-spacing:.03em}
+
+/* Clear space */
+.clearspace-demo{display:flex;align-items:center;justify-content:center;padding:3rem;
+  background:var(--kapix-navy);border-radius:16px;margin:2rem 0;position:relative;border:1px solid var(--kapix-steel)}
+.clearspace-inner{border:1px dashed rgba(0,212,170,.3);padding:2.5rem;position:relative}
+.clearspace-inner svg{width:180px;height:auto}
+.cs-label{position:absolute;font-family:var(--font-mono);font-size:.6rem;color:var(--kapix-emerald);letter-spacing:.05em}
+.cs-top{top:-18px;left:50%;transform:translateX(-50%)}
+.cs-right{right:-30px;top:50%;transform:translateY(-50%) rotate(90deg)}
+.cs-bottom{bottom:-18px;left:50%;transform:translateX(-50%)}
+.cs-left{left:-22px;top:50%;transform:translateY(-50%) rotate(-90deg)}
+
+/* Minimum size */
+.min-sizes{display:flex;gap:3rem;align-items:flex-end;margin:2rem 0;padding:2rem;
+  background:#f5f6f8;border-radius:12px}
+.min-size-item{text-align:center}
+.min-size-item svg{margin-bottom:.5rem}
+.min-size-item p{font-family:var(--font-mono);font-size:.7rem;color:var(--kapix-mist)}
+
+/* Logo misuse */
+.misuse-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:2rem}
+.misuse-item{background:#f5f6f8;border-radius:12px;padding:2rem;text-align:center;position:relative}
+.misuse-item::after{content:'✕';position:absolute;top:.75rem;right:.75rem;width:22px;height:22px;
+  background:#ef4444;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:.7rem;font-weight:700}
+.misuse-item svg{width:100px;height:auto;margin-bottom:.75rem}
+.misuse-item p{font-family:var(--font-mono);font-size:.7rem;color:#888;letter-spacing:.03em}
+
+/* ─── COLOR PALETTE ─── */
+.color-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1.25rem;margin-top:2rem}
+.color-card{border-radius:14px;overflow:hidden;border:1px solid #e8eaef;background:white}
+.color-swatch{height:120px;position:relative}
+.color-swatch span{position:absolute;bottom:.75rem;left:1rem;font-family:var(--font-mono);
+  font-size:.7rem;letter-spacing:.03em;font-weight:500}
+.color-info{padding:1rem 1.1rem}
+.color-name{font-family:var(--font-display);font-weight:600;font-size:.9rem;margin-bottom:.35rem}
+.color-vals{font-family:var(--font-mono);font-size:.7rem;color:var(--kapix-mist);line-height:1.8}
+
+.color-row{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border-radius:14px;overflow:hidden;
+  margin:1.5rem 0;border:1px solid #e8eaef}
+.color-row-swatch{height:80px;display:flex;align-items:flex-end;padding:.5rem .75rem}
+.color-row-swatch span{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.03em}
+
+/* ─── TYPOGRAPHY ─── */
+.type-specimen{margin:2.5rem 0;padding:2.5rem;background:white;border-radius:16px;border:1px solid #e8eaef}
+.type-name{font-family:var(--font-mono);font-size:.7rem;color:var(--kapix-emerald);letter-spacing:.08em;
+  text-transform:uppercase;margin-bottom:1.25rem;font-weight:600}
+.type-display{font-family:var(--font-display);line-height:1.1;margin-bottom:.5rem}
+.type-body{font-family:var(--font-body);line-height:1.1;margin-bottom:.5rem}
+.type-mono-show{font-family:var(--font-mono);line-height:1.3;margin-bottom:.5rem}
+
+.type-scale{margin:2rem 0}
+.ts-row{display:flex;align-items:baseline;gap:2rem;padding:1rem 0;border-bottom:1px solid #f0f1f4}
+.ts-label{font-family:var(--font-mono);font-size:.65rem;color:var(--kapix-mist);width:120px;flex-shrink:0;
+  letter-spacing:.04em;text-transform:uppercase}
+.ts-sample-display{font-family:var(--font-display)}
+.ts-sample-body{font-family:var(--font-body)}
+
+/* ─── ICONOGRAPHY / ELEMENTS ─── */
+.elements-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;margin:2rem 0}
+.element-card{background:white;border:1px solid #e8eaef;border-radius:14px;padding:2rem;text-align:center}
+.element-card svg{width:48px;height:48px;margin-bottom:1rem}
+.element-card p{font-family:var(--font-mono);font-size:.7rem;color:var(--kapix-mist);letter-spacing:.03em}
+
+/* ─── TONE / VOICE ─── */
+.voice-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin:2rem 0}
+.voice-card{padding:2rem;border-radius:14px;border:1px solid #e8eaef;background:white}
+.voice-card.do{border-left:3px solid var(--kapix-emerald)}
+.voice-card.dont{border-left:3px solid #ef4444}
+.voice-label{font-family:var(--font-display);font-weight:700;font-size:.8rem;letter-spacing:.06em;
+  text-transform:uppercase;margin-bottom:1rem}
+.voice-card.do .voice-label{color:var(--kapix-emerald)}
+.voice-card.dont .voice-label{color:#ef4444}
+.voice-card ul{list-style:none;padding:0}
+.voice-card li{padding:.4rem 0;font-size:.9rem;color:#555;line-height:1.5}
+.voice-card li::before{content:'→ ';color:var(--kapix-mist)}
+
+/* ─── KEY PHRASES ─── */
+.phrase-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin:2rem 0}
+.phrase-card{background:var(--kapix-navy);border-radius:14px;padding:2.25rem;color:white;
+  position:relative;overflow:hidden}
+.phrase-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--kapix-emerald),var(--kapix-blue))}
+.phrase-card blockquote{font-family:var(--font-body);font-style:italic;font-size:1.15rem;
+  line-height:1.5;color:var(--kapix-silver)}
+.phrase-card .usage{font-family:var(--font-mono);font-size:.65rem;color:var(--kapix-ghost);
+  margin-top:1rem;letter-spacing:.04em;text-transform:uppercase}
+
+/* ─── SPACING & LAYOUT SYSTEM ─── */
+.spacing-demo{display:flex;gap:.5rem;align-items:flex-end;margin:2rem 0;padding:2rem;
+  background:#f5f6f8;border-radius:12px}
+.sp-block{background:var(--kapix-emerald-dim);border:1px solid rgba(0,212,170,.2);border-radius:4px;
+  display:flex;align-items:center;justify-content:center}
+.sp-block span{font-family:var(--font-mono);font-size:.6rem;color:var(--kapix-emerald)}
+
+/* ─── APPLICATION EXAMPLES ─── */
+.app-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin:2rem 0}
+.app-card{border-radius:16px;overflow:hidden;border:1px solid #e8eaef;background:white}
+.app-preview{height:220px;position:relative;overflow:hidden}
+.app-label{padding:1.25rem;font-family:var(--font-mono);font-size:.75rem;color:var(--kapix-mist);
+  letter-spacing:.04em}
+
+/* ─── TABLE OF CONTENTS ─── */
+.toc{display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem 2rem;margin-top:2rem}
+.toc a{display:flex;align-items:center;gap:.75rem;padding:.75rem 1rem;border-radius:8px;
+  font-family:var(--font-display);font-size:.9rem;font-weight:500;color:var(--kapix-mist);
+  text-decoration:none;transition:all .2s;border:1px solid transparent}
+.toc a:hover{background:rgba(0,212,170,.05);border-color:rgba(0,212,170,.15);color:var(--kapix-emerald)}
+.toc-num{font-family:var(--font-mono);font-size:.65rem;font-weight:600;color:var(--kapix-emerald);
+  letter-spacing:.06em;width:28px}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:900px){
+  .page{padding:3rem 1.5rem}
+  .logo-showcase{grid-template-columns:1fr}
+  .misuse-grid{grid-template-columns:1fr 1fr}
+  .color-grid{grid-template-columns:repeat(2,1fr)}
+  .elements-grid{grid-template-columns:repeat(2,1fr)}
+  .voice-grid{grid-template-columns:1fr}
+  .phrase-cards{grid-template-columns:1fr}
+  .app-grid{grid-template-columns:1fr}
+  .logo-construction{grid-template-columns:1fr}
+  .cover h1{font-size:2.5rem}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- COVER PAGE                                  -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="cover">
+  <div class="cover-grid"></div>
+  <div class="cover-logo">
+    <svg viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="72" y1="52" x2="72" y2="188" stroke="#00D4AA" stroke-width="4" stroke-linecap="round"/>
+      <line x1="72" y1="120" x2="126" y2="120" stroke="#00D4AA" stroke-width="4" stroke-linecap="round"/>
+      <line x1="126" y1="120" x2="172" y2="60" stroke="#00D4AA" stroke-width="4" stroke-linecap="round"/>
+      <line x1="126" y1="120" x2="172" y2="180" stroke="#00D4AA" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="72" cy="52" r="6" fill="#00D4AA"/>
+      <circle cx="72" cy="188" r="6" fill="#00D4AA"/>
+      <circle cx="172" cy="60" r="6" fill="#00D4AA"/>
+      <circle cx="172" cy="180" r="6" fill="#00D4AA"/>
+      <circle cx="126" cy="120" r="9" fill="#00D4AA"/>
+      <circle cx="126" cy="120" r="4" fill="#060A12"/>
+      <circle cx="72" cy="120" r="4.5" fill="#00D4AA"/>
+    </svg>
+  </div>
+  <h1>Kapix</h1>
+  <div class="subtitle">Brand Design System &amp; Identity Guidelines</div>
+  <div class="version">Version 1.0 — March 2026 — Confidential</div>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- TABLE OF CONTENTS                           -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="page">
+  <div class="sh">
+    <span class="sh-num">Contents</span>
+    <h2>Design System Overview</h2>
+    <p>A comprehensive guide to the Kapix visual identity, ensuring brand consistency across all touchpoints.</p>
+  </div>
+  <div class="toc">
+    <a href="#s1"><span class="toc-num">01</span>Logo System</a>
+    <a href="#s5"><span class="toc-num">05</span>Iconography</a>
+    <a href="#s2"><span class="toc-num">02</span>Logo Construction &amp; Usage</a>
+    <a href="#s6"><span class="toc-num">06</span>Tone &amp; Voice</a>
+    <a href="#s3"><span class="toc-num">03</span>Color Palette</a>
+    <a href="#s7"><span class="toc-num">07</span>Key Brand Phrases</a>
+    <a href="#s4"><span class="toc-num">04</span>Typography</a>
+    <a href="#s8"><span class="toc-num">08</span>Application Examples</a>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- 01 — LOGO SYSTEM                            -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="page" id="s1">
+  <div class="sh">
+    <span class="sh-num">01 — Logo System</span>
+    <h2>The Kapix Mark</h2>
+    <p>The Kapix logo is an abstract geometric "K" formed by converging data pathways. The central node represents the AI decision engine — where inputs converge and intelligent outputs emerge. Terminal nodes at each endpoint symbolise data entry points and decision outputs.</p>
+  </div>
+
+  <!-- Primary lockups on dark and light -->
+  <div class="logo-showcase">
+    <div class="logo-box dark">
+      <svg viewBox="0 0 480 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Mark -->
+        <line x1="28" y1="20" x2="28" y2="100" stroke="#00D4AA" stroke-width="3.2" stroke-linecap="round"/>
+        <line x1="28" y1="60" x2="62" y2="60" stroke="#00D4AA" stroke-width="3.2" stroke-linecap="round"/>
+        <line x1="62" y1="60" x2="90" y2="24" stroke="#00D4AA" stroke-width="3.2" stroke-linecap="round"/>
+        <line x1="62" y1="60" x2="90" y2="96" stroke="#00D4AA" stroke-width="3.2" stroke-linecap="round"/>
+        <circle cx="28" cy="20" r="4.5" fill="#00D4AA"/>
+        <circle cx="28" cy="100" r="4.5" fill="#00D4AA"/>
+        <circle cx="90" cy="24" r="4.5" fill="#00D4AA"/>
+        <circle cx="90" cy="96" r="4.5" fill="#00D4AA"/>
+        <circle cx="62" cy="60" r="6.5" fill="#00D4AA"/>
+        <circle cx="62" cy="60" r="3" fill="#060A12"/>
+        <circle cx="28" cy="60" r="3.5" fill="#00D4AA"/>
+        <!-- Wordmark -->
+        <text x="120" y="72" font-family="'Anybody',system-ui,sans-serif" font-weight="700" font-size="46" fill="#FFFFFF" letter-spacing="-1">Kapix</text>
+      </svg>
+      <span class="logo-box-label" style="color:#4A5268">Primary — Dark Background</span>
+    </div>
+
+    <div class="logo-box light">
+      <svg viewBox="0 0 480 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="28" y1="20" x2="28" y2="100" stroke="#060A12" stroke-width="3.2" stroke-linecap="round"/>
+        <line x1="28" y1="60" x2="62" y2="60" stroke="#060A12" stroke-width="3.2" stroke-linecap="round"/>
+        <line x1="62" y1="60" x2="90" y2="24" stroke="#060A12" stroke-width="3.2" stroke-linecap="round"/>
+        <line x1="62" y1="60" x2="90" y2="96" stroke="#060A12" stroke-width="3.2" stroke-linecap="round"/>
+        <circle cx="28" cy="20" r="4.5" fill="#060A12"/>
+        <circle cx="28" cy="100" r="4.5" fill="#060A12"/>
+        <circle cx="90" cy="24" r="4.5" fill="#060A12"/>
+        <circle cx="90" cy="96" r="4.5" fill="#060A12"/>
+        <circle cx="62" cy="60" r="6.5" fill="#00D4AA"/>
+        <circle cx="62" cy="60" r="3" fill="#FFFFFF"/>
+        <circle cx="28" cy="60" r="3.5" fill="#060A12"/>
+        <text x="120" y="72" font-family="'Anybody',system-ui,sans-serif" font-weight="700" font-size="46" fill="#060A12" letter-spacing="-1">Kapix</text>
+      </svg>
+      <span class="logo-box-label" style="color:#aaa">Primary — Light Background</span>
+    </div>
+
+    <div class="logo-box emerald">
+      <svg viewBox="0 0 480 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="28" y1="20" x2="28" y2="100" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round"/>
+        <line x1="28" y1="60" x2="62" y2="60" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round"/>
+        <line x1="62" y1="60" x2="90" y2="24" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round"/>
+        <line x1="62" y1="60" x2="90" y2="96" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round"/>
+        <circle cx="28" cy="20" r="4.5" fill="#FFFFFF"/>
+        <circle cx="28" cy="100" r="4.5" fill="#FFFFFF"/>
+        <circle cx="90" cy="24" r="4.5" fill="#FFFFFF"/>
+        <circle cx="90" cy="96" r="4.5" fill="#FFFFFF"/>
+        <circle cx="62" cy="60" r="6.5" fill="#FFFFFF"/>
+        <circle cx="62" cy="60" r="3" fill="#00D4AA"/>
+        <circle cx="28" cy="60" r="3.5" fill="#FFFFFF"/>
+        <text x="120" y="72" font-family="'Anybody',system-ui,sans-serif" font-weight="700" font-size="46" fill="#FFFFFF" letter-spacing="-1">Kapix</text>
+      </svg>
+      <span class="logo-box-label" style="color:rgba(255,255,255,.5)">Reversed — Brand Color</span>
+    </div>
+
+    <div class="logo-box slate">
+      <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="28" y1="20" x2="28" y2="100" stroke="#00D4AA" stroke-width="3.2" stroke-linecap="round"/>
+        <line x1="28" y1="60" x2="62" y2="60" stroke="#00D4AA" stroke-width="3.2" stroke-linecap="round"/>
+        <line x1="62" y1="60" x2="92" y2="24" stroke="#00D4AA" stroke-width="3.2" stroke-linecap="round"/>
+        <line x1="62" y1="60" x2="92" y2="96" stroke="#00D4AA" stroke-width="3.2" stroke-linecap="round"/>
+        <circle cx="28" cy="20" r="4.5" fill="#00D4AA"/>
+        <circle cx="28" cy="100" r="4.5" fill="#00D4AA"/>
+        <circle cx="92" cy="24" r="4.5" fill="#00D4AA"/>
+        <circle cx="92" cy="96" r="4.5" fill="#00D4AA"/>
+        <circle cx="62" cy="60" r="6.5" fill="#00D4AA"/>
+        <circle cx="62" cy="60" r="3" fill="#161C2A"/>
+        <circle cx="28" cy="60" r="3.5" fill="#00D4AA"/>
+      </svg>
+      <span class="logo-box-label" style="color:#4A5268">Standalone Mark — Icon Use</span>
+    </div>
+  </div>
+
+  <!-- Logo anatomy -->
+  <h3 style="font-family:var(--font-display);font-size:1.1rem;font-weight:600;margin:3rem 0 1rem">Logo Anatomy</h3>
+  <div class="logo-construction">
+    <div class="lc-item">
+      <svg viewBox="0 0 140 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="35" y1="25" x2="35" y2="115" stroke="#00D4AA" stroke-width="2.5" stroke-linecap="round" opacity=".3"/>
+        <line x1="35" y1="70" x2="35" y2="70" stroke="#00D4AA" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="35" cy="25" r="4" fill="#00D4AA"/>
+        <circle cx="35" cy="115" r="4" fill="#00D4AA"/>
+        <circle cx="35" cy="70" r="3.5" fill="#00D4AA"/>
+        <line x1="35" y1="25" x2="35" y2="115" stroke="#00D4AA" stroke-width="2.5" stroke-linecap="round"/>
+        <text x="60" y="74" font-family="monospace" font-size="9" fill="#8891A5">Input Stream</text>
+      </svg>
+      <p>Vertical input pathway<br>Data ingestion line</p>
+    </div>
+    <div class="lc-item">
+      <svg viewBox="0 0 140 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="70" cy="70" r="8" fill="#00D4AA"/>
+        <circle cx="70" cy="70" r="3.5" fill="#060A12"/>
+        <line x1="46" y1="70" x2="62" y2="70" stroke="#00D4AA" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="3 3"/>
+        <line x1="78" y1="70" x2="94" y2="50" stroke="#00D4AA" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="3 3"/>
+        <line x1="78" y1="70" x2="94" y2="90" stroke="#00D4AA" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="3 3"/>
+        <text x="44" y="100" font-family="monospace" font-size="9" fill="#8891A5">AI Core Node</text>
+      </svg>
+      <p>Central intelligence node<br>The AI decision engine</p>
+    </div>
+    <div class="lc-item">
+      <svg viewBox="0 0 140 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="50" y1="70" x2="90" y2="30" stroke="#00D4AA" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="50" y1="70" x2="90" y2="110" stroke="#00D4AA" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="90" cy="30" r="4" fill="#00D4AA"/>
+        <circle cx="90" cy="110" r="4" fill="#00D4AA"/>
+        <text x="36" y="95" font-family="monospace" font-size="9" fill="#8891A5">Decision Outputs</text>
+      </svg>
+      <p>Branching outputs<br>Decision pathways diverge</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- 02 — LOGO CONSTRUCTION & USAGE              -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="page" id="s2">
+  <div class="sh">
+    <span class="sh-num">02 — Logo Construction &amp; Usage</span>
+    <h2>Clear Space &amp; Minimum Sizes</h2>
+    <p>Maintain proper clear space around the logo to preserve its visual integrity. The minimum clear space is defined by the height of the central node ("x" unit).</p>
+  </div>
+
+  <div class="clearspace-demo">
+    <div class="clearspace-inner">
+      <span class="cs-label cs-top">2× node height</span>
+      <span class="cs-label cs-right">2× node height</span>
+      <span class="cs-label cs-bottom">2× node height</span>
+      <span class="cs-label cs-left">2× node height</span>
+      <svg viewBox="0 0 480 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="28" y1="20" x2="28" y2="100" stroke="#00D4AA" stroke-width="3.2" stroke-linecap="round"/>
+        <line x1="28" y1="60" x2="62" y2="60" stroke="#00D4AA" stroke-width="3.2" stroke-linecap="round"/>
+        <line x1="62" y1="60" x2="90" y2="24" stroke="#00D4AA" stroke-width="3.2" stroke-linecap="round"/>
+        <line x1="62" y1="60" x2="90" y2="96" stroke="#00D4AA" stroke-width="3.2" stroke-linecap="round"/>
+        <circle cx="28" cy="20" r="4.5" fill="#00D4AA"/>
+        <circle cx="28" cy="100" r="4.5" fill="#00D4AA"/>
+        <circle cx="90" cy="24" r="4.5" fill="#00D4AA"/>
+        <circle cx="90" cy="96" r="4.5" fill="#00D4AA"/>
+        <circle cx="62" cy="60" r="6.5" fill="#00D4AA"/>
+        <circle cx="62" cy="60" r="3" fill="#060A12"/>
+        <circle cx="28" cy="60" r="3.5" fill="#00D4AA"/>
+        <text x="120" y="72" font-family="'Anybody',system-ui,sans-serif" font-weight="700" font-size="46" fill="#FFFFFF" letter-spacing="-1">Kapix</text>
+      </svg>
+    </div>
+  </div>
+
+  <h3 style="font-family:var(--font-display);font-size:1.1rem;font-weight:600;margin:2.5rem 0 1rem">Minimum Reproduction Sizes</h3>
+  <div class="min-sizes">
+    <div class="min-size-item">
+      <svg viewBox="0 0 120 40" fill="none" xmlns="http://www.w3.org/2000/svg" width="120">
+        <line x1="8" y1="6" x2="8" y2="34" stroke="#060A12" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="8" y1="20" x2="20" y2="20" stroke="#060A12" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="20" y1="20" x2="30" y2="8" stroke="#060A12" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="20" y1="20" x2="30" y2="32" stroke="#060A12" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="20" cy="20" r="3" fill="#00D4AA"/>
+        <text x="38" y="24" font-family="system-ui" font-weight="700" font-size="16" fill="#060A12">Kapix</text>
+      </svg>
+      <p>Print: 24mm wide</p>
+    </div>
+    <div class="min-size-item">
+      <svg viewBox="0 0 80 30" fill="none" xmlns="http://www.w3.org/2000/svg" width="80">
+        <line x1="6" y1="5" x2="6" y2="25" stroke="#060A12" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="6" y1="15" x2="14" y2="15" stroke="#060A12" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="14" y1="15" x2="22" y2="6" stroke="#060A12" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="14" y1="15" x2="22" y2="24" stroke="#060A12" stroke-width="1.2" stroke-linecap="round"/>
+        <circle cx="14" cy="15" r="2.5" fill="#00D4AA"/>
+        <text x="28" y="19" font-family="system-ui" font-weight="700" font-size="12" fill="#060A12">Kapix</text>
+      </svg>
+      <p>Digital: 80px wide</p>
+    </div>
+    <div class="min-size-item">
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" width="32">
+        <line x1="8" y1="6" x2="8" y2="26" stroke="#00D4AA" stroke-width="2" stroke-linecap="round"/>
+        <line x1="8" y1="16" x2="16" y2="16" stroke="#00D4AA" stroke-width="2" stroke-linecap="round"/>
+        <line x1="16" y1="16" x2="24" y2="7" stroke="#00D4AA" stroke-width="2" stroke-linecap="round"/>
+        <line x1="16" y1="16" x2="24" y2="25" stroke="#00D4AA" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="16" cy="16" r="3" fill="#00D4AA"/>
+        <circle cx="16" cy="16" r="1.5" fill="#060A12"/>
+      </svg>
+      <p>Favicon: 32×32px</p>
+    </div>
+  </div>
+
+  <h3 style="font-family:var(--font-display);font-size:1.1rem;font-weight:600;margin:3rem 0 1rem">Logo Misuse</h3>
+  <div class="misuse-grid">
+    <div class="misuse-item">
+      <svg viewBox="0 0 100 60" fill="none" xmlns="http://www.w3.org/2000/svg" style="transform:rotate(15deg)">
+        <line x1="18" y1="10" x2="18" y2="50" stroke="#999" stroke-width="2" stroke-linecap="round"/>
+        <line x1="18" y1="30" x2="38" y2="30" stroke="#999" stroke-width="2" stroke-linecap="round"/>
+        <line x1="38" y1="30" x2="55" y2="12" stroke="#999" stroke-width="2" stroke-linecap="round"/>
+        <line x1="38" y1="30" x2="55" y2="48" stroke="#999" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="38" cy="30" r="4" fill="#999"/>
+      </svg>
+      <p>Don't rotate</p>
+    </div>
+    <div class="misuse-item">
+      <svg viewBox="0 0 100 60" fill="none" xmlns="http://www.w3.org/2000/svg" style="transform:scaleX(1.4)">
+        <line x1="18" y1="10" x2="18" y2="50" stroke="#999" stroke-width="2" stroke-linecap="round"/>
+        <line x1="18" y1="30" x2="38" y2="30" stroke="#999" stroke-width="2" stroke-linecap="round"/>
+        <line x1="38" y1="30" x2="55" y2="12" stroke="#999" stroke-width="2" stroke-linecap="round"/>
+        <line x1="38" y1="30" x2="55" y2="48" stroke="#999" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="38" cy="30" r="4" fill="#999"/>
+      </svg>
+      <p>Don't stretch</p>
+    </div>
+    <div class="misuse-item">
+      <svg viewBox="0 0 100 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="18" y1="10" x2="18" y2="50" stroke="#ff6b6b" stroke-width="2" stroke-linecap="round"/>
+        <line x1="18" y1="30" x2="38" y2="30" stroke="#4ecdc4" stroke-width="2" stroke-linecap="round"/>
+        <line x1="38" y1="30" x2="55" y2="12" stroke="#ffe66d" stroke-width="2" stroke-linecap="round"/>
+        <line x1="38" y1="30" x2="55" y2="48" stroke="#a855f7" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="38" cy="30" r="4" fill="#ff6b6b"/>
+      </svg>
+      <p>Don't recolour arbitrarily</p>
+    </div>
+    <div class="misuse-item">
+      <svg viewBox="0 0 100 60" fill="none" xmlns="http://www.w3.org/2000/svg" style="opacity:.3">
+        <line x1="18" y1="10" x2="18" y2="50" stroke="#00D4AA" stroke-width="2" stroke-linecap="round"/>
+        <line x1="18" y1="30" x2="38" y2="30" stroke="#00D4AA" stroke-width="2" stroke-linecap="round"/>
+        <line x1="38" y1="30" x2="55" y2="12" stroke="#00D4AA" stroke-width="2" stroke-linecap="round"/>
+        <line x1="38" y1="30" x2="55" y2="48" stroke="#00D4AA" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="38" cy="30" r="4" fill="#00D4AA"/>
+      </svg>
+      <p>Don't reduce opacity</p>
+    </div>
+    <div class="misuse-item">
+      <svg viewBox="0 0 100 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="18" y1="10" x2="18" y2="50" stroke="#00D4AA" stroke-width="2" stroke-linecap="round"/>
+        <line x1="18" y1="30" x2="38" y2="30" stroke="#00D4AA" stroke-width="2" stroke-linecap="round"/>
+        <line x1="38" y1="30" x2="55" y2="12" stroke="#00D4AA" stroke-width="2" stroke-linecap="round"/>
+        <line x1="38" y1="30" x2="55" y2="48" stroke="#00D4AA" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="38" cy="30" r="4" fill="#00D4AA"/>
+        <rect x="5" y="3" width="90" height="54" rx="6" stroke="#ff6b6b" stroke-width="1.5" fill="none" stroke-dasharray="3 2"/>
+      </svg>
+      <p>Don't add outlines or borders</p>
+    </div>
+    <div class="misuse-item">
+      <div style="background:linear-gradient(45deg,#ff6b6b,#4ecdc4);border-radius:6px;padding:8px;display:inline-block;margin-bottom:.5rem">
+        <svg viewBox="0 0 80 50" fill="none" xmlns="http://www.w3.org/2000/svg" width="80">
+          <line x1="15" y1="8" x2="15" y2="42" stroke="white" stroke-width="2" stroke-linecap="round"/>
+          <line x1="15" y1="25" x2="32" y2="25" stroke="white" stroke-width="2" stroke-linecap="round"/>
+          <line x1="32" y1="25" x2="46" y2="10" stroke="white" stroke-width="2" stroke-linecap="round"/>
+          <line x1="32" y1="25" x2="46" y2="40" stroke="white" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="32" cy="25" r="3.5" fill="white"/>
+        </svg>
+      </div>
+      <p>Don't place on busy backgrounds</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- 03 — COLOR PALETTE                          -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="page" id="s3">
+  <div class="sh">
+    <span class="sh-num">03 — Color Palette</span>
+    <h2>Brand Colors</h2>
+    <p>The Kapix palette is built around deep, authoritative darks accented with Emerald — a signal of intelligence, precision, and technological confidence. Blue serves as a supporting accent for data visualisations and interactive elements.</p>
+  </div>
+
+  <h3 style="font-family:var(--font-display);font-size:1rem;font-weight:600;margin-bottom:1rem">Primary Colors</h3>
+  <div class="color-grid">
+    <div class="color-card">
+      <div class="color-swatch" style="background:#00D4AA"><span style="color:#060A12">Kapix Emerald</span></div>
+      <div class="color-info">
+        <div class="color-name">Kapix Emerald</div>
+        <div class="color-vals">HEX #00D4AA<br>RGB 0, 212, 170<br>HSL 168°, 100%, 42%</div>
+      </div>
+    </div>
+    <div class="color-card">
+      <div class="color-swatch" style="background:#060A12"><span style="color:#00D4AA">Kapix Navy</span></div>
+      <div class="color-info">
+        <div class="color-name">Kapix Navy</div>
+        <div class="color-vals">HEX #060A12<br>RGB 6, 10, 18<br>HSL 220°, 50%, 5%</div>
+      </div>
+    </div>
+    <div class="color-card">
+      <div class="color-swatch" style="background:#0C1019"><span style="color:#8891A5">Graphite</span></div>
+      <div class="color-info">
+        <div class="color-name">Graphite</div>
+        <div class="color-vals">HEX #0C1019<br>RGB 12, 16, 25<br>HSL 222°, 35%, 7%</div>
+      </div>
+    </div>
+    <div class="color-card">
+      <div class="color-swatch" style="background:#2563EB"><span style="color:#fff">Signal Blue</span></div>
+      <div class="color-info">
+        <div class="color-name">Signal Blue</div>
+        <div class="color-vals">HEX #2563EB<br>RGB 37, 99, 235<br>HSL 221°, 83%, 53%</div>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="font-family:var(--font-display);font-size:1rem;font-weight:600;margin:2.5rem 0 1rem">Neutral Scale</h3>
+  <div class="color-row">
+    <div class="color-row-swatch" style="background:#161C2A"><span style="color:#8891A5">Slate<br>#161C2A</span></div>
+    <div class="color-row-swatch" style="background:#1E2538"><span style="color:#8891A5">Steel<br>#1E2538</span></div>
+    <div class="color-row-swatch" style="background:#4A5268"><span style="color:#C8CDD8">Ghost<br>#4A5268</span></div>
+    <div class="color-row-swatch" style="background:#8891A5"><span style="color:#060A12">Mist<br>#8891A5</span></div>
+    <div class="color-row-swatch" style="background:#C8CDD8"><span style="color:#060A12">Silver<br>#C8CDD8</span></div>
+  </div>
+
+  <h3 style="font-family:var(--font-display);font-size:1rem;font-weight:600;margin:2.5rem 0 1rem">Semantic Colors</h3>
+  <div class="color-grid" style="grid-template-columns:repeat(3,1fr)">
+    <div class="color-card">
+      <div class="color-swatch" style="background:#10B981;height:80px"><span style="color:#fff">Success</span></div>
+      <div class="color-info"><div class="color-name">Success Green</div><div class="color-vals">HEX #10B981</div></div>
+    </div>
+    <div class="color-card">
+      <div class="color-swatch" style="background:#F59E0B;height:80px"><span style="color:#fff">Warning</span></div>
+      <div class="color-info"><div class="color-name">Warning Amber</div><div class="color-vals">HEX #F59E0B</div></div>
+    </div>
+    <div class="color-card">
+      <div class="color-swatch" style="background:#EF4444;height:80px"><span style="color:#fff">Error</span></div>
+      <div class="color-info"><div class="color-name">Error Red</div><div class="color-vals">HEX #EF4444</div></div>
+    </div>
+  </div>
+
+  <h3 style="font-family:var(--font-display);font-size:1rem;font-weight:600;margin:2.5rem 0 1rem">Color Usage Rules</h3>
+  <div style="background:white;border:1px solid #e8eaef;border-radius:14px;padding:2rem;font-size:.9rem;line-height:1.8;color:#555">
+    <strong style="color:#1a1a2e">Emerald</strong> is reserved for primary CTAs, the logo mark core node, active/hover states, and key data highlights. Never use as a background fill for large areas.<br>
+    <strong style="color:#1a1a2e">Navy / Graphite</strong> are the primary background colours for all dark-mode interfaces. Navy is the base; Graphite is for elevated surfaces.<br>
+    <strong style="color:#1a1a2e">Signal Blue</strong> is for secondary interactive elements, data chart accents, and links on dark backgrounds.<br>
+    <strong style="color:#1a1a2e">Text hierarchy</strong>: White (#FFF) for primary text on dark, Silver for secondary, Mist for tertiary, Ghost for disabled/placeholder.
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- 04 — TYPOGRAPHY                             -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="page" id="s4">
+  <div class="sh">
+    <span class="sh-num">04 — Typography</span>
+    <h2>Type System</h2>
+    <p>Kapix uses a three-font system: a geometric display face for headlines and brand moments, a refined serif for body text and editorial content, and a monospace for data, code, and technical labels.</p>
+  </div>
+
+  <div class="type-specimen">
+    <div class="type-name">Display — Anybody</div>
+    <div class="type-display" style="font-size:3.5rem;font-weight:700;letter-spacing:-.03em">Kapix Intelligence</div>
+    <div class="type-display" style="font-size:2rem;font-weight:500;letter-spacing:-.01em;color:#555;margin-top:.5rem">AI that sees ahead.</div>
+    <div style="margin-top:1.5rem;font-family:var(--font-mono);font-size:.7rem;color:var(--kapix-mist);line-height:2">
+      Weights: 300 Light · 400 Regular · 500 Medium · 600 SemiBold · 700 Bold · 800 ExtraBold<br>
+      Use: Headlines, hero text, navigation, buttons, brand statements
+    </div>
+  </div>
+
+  <div class="type-specimen">
+    <div class="type-name">Body — Newsreader</div>
+    <div class="type-body" style="font-size:1.5rem;font-weight:400;color:#333">Financial intelligence for the world's most demanding decisions.</div>
+    <div class="type-body" style="font-size:1rem;font-weight:400;color:#666;margin-top:.75rem;max-width:560px;line-height:1.7">Kapix processes billions of data signals through proprietary AI models — delivering actionable intelligence with latency measured in milliseconds, not minutes. Our platform is engineered for enterprises that require the highest standard of precision.</div>
+    <div style="margin-top:1.5rem;font-family:var(--font-mono);font-size:.7rem;color:var(--kapix-mist);line-height:2">
+      Weights: 300 Light · 400 Regular · 500 Medium · 600 SemiBold<br>
+      Use: Body copy, descriptions, blog content, long-form text, captions
+    </div>
+  </div>
+
+  <div class="type-specimen">
+    <div class="type-name">Mono — JetBrains Mono</div>
+    <div class="type-mono-show" style="font-size:1.1rem;font-weight:500;color:#333">risk_score: 0.023 → LOW_EXPOSURE</div>
+    <div class="type-mono-show" style="font-size:.85rem;font-weight:400;color:#666;margin-top:.5rem">throughput: 84,291 tx/sec | latency: 12ms | uptime: 99.97%</div>
+    <div style="margin-top:1.5rem;font-family:var(--font-mono);font-size:.7rem;color:var(--kapix-mist);line-height:2">
+      Weights: 400 Regular · 500 Medium · 600 SemiBold<br>
+      Use: Data labels, metrics, code snippets, technical identifiers, tags, badges
+    </div>
+  </div>
+
+  <h3 style="font-family:var(--font-display);font-size:1.1rem;font-weight:600;margin:2.5rem 0 1rem">Type Scale</h3>
+  <div class="type-scale">
+    <div class="ts-row"><span class="ts-label">Display XL / 64px</span><span class="ts-sample-display" style="font-size:3rem;font-weight:700;letter-spacing:-.03em">Intelligence</span></div>
+    <div class="ts-row"><span class="ts-label">Display L / 48px</span><span class="ts-sample-display" style="font-size:2.25rem;font-weight:700;letter-spacing:-.02em">Intelligence</span></div>
+    <div class="ts-row"><span class="ts-label">Display M / 36px</span><span class="ts-sample-display" style="font-size:1.75rem;font-weight:600;letter-spacing:-.02em">Intelligence</span></div>
+    <div class="ts-row"><span class="ts-label">Heading / 24px</span><span class="ts-sample-display" style="font-size:1.25rem;font-weight:600;letter-spacing:-.01em">Intelligence Layer</span></div>
+    <div class="ts-row"><span class="ts-label">Body L / 18px</span><span class="ts-sample-body" style="font-size:1.05rem;font-weight:400">Financial intelligence for demanding decisions.</span></div>
+    <div class="ts-row"><span class="ts-label">Body M / 16px</span><span class="ts-sample-body" style="font-size:.95rem;font-weight:400;color:#666">Real-time credit scoring and risk assessment.</span></div>
+    <div class="ts-row"><span class="ts-label">Body S / 14px</span><span class="ts-sample-body" style="font-size:.85rem;font-weight:400;color:#888">Adaptive neural networks detect anomalous patterns.</span></div>
+    <div class="ts-row"><span class="ts-label">Caption / 12px</span><span style="font-family:var(--font-mono);font-size:.75rem;font-weight:500;color:#888">THROUGHPUT: 84K/SEC · LATENCY: 12MS</span></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- 05 — ICONOGRAPHY                            -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="page" id="s5">
+  <div class="sh">
+    <span class="sh-num">05 — Iconography</span>
+    <h2>Icon Language</h2>
+    <p>Icons use a consistent 1.5px stroke weight with rounded caps and joins. They follow the same geometric precision as the logo mark — clean, minimal, purposeful. All icons share a 24×24 viewbox.</p>
+  </div>
+
+  <div class="elements-grid">
+    <div class="element-card">
+      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="8" y="8" width="32" height="32" rx="8" stroke="#00D4AA" stroke-width="1.5"/>
+        <path d="M16 30L22 22L26 26L32 18" stroke="#00D4AA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <p>Credit Scoring</p>
+    </div>
+    <div class="element-card">
+      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M24 40s12-6 12-16V12l-12-4-12 4v12c0 10 12 16 12 16z" stroke="#00D4AA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M19 24l4 4 6-8" stroke="#00D4AA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <p>Fraud Detection</p>
+    </div>
+    <div class="element-card">
+      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="24" cy="24" r="14" stroke="#00D4AA" stroke-width="1.5"/>
+        <path d="M24 16v8l5 5" stroke="#00D4AA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="24" cy="24" r="2" fill="#00D4AA"/>
+      </svg>
+      <p>Real-Time Analysis</p>
+    </div>
+    <div class="element-card">
+      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M14 34V22" stroke="#00D4AA" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M22 34V14" stroke="#00D4AA" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M30 34V26" stroke="#00D4AA" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M38 34V18" stroke="#00D4AA" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="10" y1="34" x2="42" y2="34" stroke="#1E2538" stroke-width="1"/>
+      </svg>
+      <p>Risk Assessment</p>
+    </div>
+    <div class="element-card">
+      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="16" cy="16" r="4" stroke="#00D4AA" stroke-width="1.5"/>
+        <circle cx="32" cy="16" r="4" stroke="#00D4AA" stroke-width="1.5"/>
+        <circle cx="24" cy="32" r="4" stroke="#00D4AA" stroke-width="1.5"/>
+        <line x1="19" y1="18" x2="22" y2="29" stroke="#00D4AA" stroke-width="1.5"/>
+        <line x1="29" y1="18" x2="26" y2="29" stroke="#00D4AA" stroke-width="1.5"/>
+        <line x1="20" y1="16" x2="28" y2="16" stroke="#00D4AA" stroke-width="1.5"/>
+      </svg>
+      <p>Decision Networks</p>
+    </div>
+    <div class="element-card">
+      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="10" width="28" height="28" rx="4" stroke="#00D4AA" stroke-width="1.5"/>
+        <path d="M10 20h28M20 20v18M28 20v18" stroke="#00D4AA" stroke-width="1" opacity=".4"/>
+        <circle cx="24" cy="28" r="3" fill="#00D4AA" opacity=".6"/>
+      </svg>
+      <p>Data Tables</p>
+    </div>
+    <div class="element-card">
+      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 36l8-12 6 6 10-16" stroke="#00D4AA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M30 14h6v6" stroke="#00D4AA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <p>Trend Analysis</p>
+    </div>
+    <div class="element-card">
+      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M24 10v28" stroke="#00D4AA" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M16 18l8-8 8 8" stroke="#00D4AA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M12 38h24" stroke="#00D4AA" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <p>Performance</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- 06 — TONE & VOICE                           -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="page" id="s6">
+  <div class="sh">
+    <span class="sh-num">06 — Tone &amp; Voice</span>
+    <h2>Brand Voice</h2>
+    <p>Kapix speaks with quiet confidence. The voice is clear, direct, and expert — never hype-driven. Every word earns its place. We communicate the way the best engineers and financial minds think: precisely.</p>
+  </div>
+
+  <h3 style="font-family:var(--font-display);font-size:1.1rem;font-weight:600;margin-bottom:1.25rem">Voice Attributes</h3>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:3rem">
+    <div style="text-align:center;padding:1.5rem;background:white;border-radius:12px;border:1px solid #e8eaef">
+      <div style="font-family:var(--font-display);font-weight:700;font-size:1.25rem;color:var(--kapix-emerald)">Precise</div>
+      <div style="font-family:var(--font-body);font-size:.8rem;color:#888;margin-top:.35rem">No vague claims</div>
+    </div>
+    <div style="text-align:center;padding:1.5rem;background:white;border-radius:12px;border:1px solid #e8eaef">
+      <div style="font-family:var(--font-display);font-weight:700;font-size:1.25rem;color:var(--kapix-emerald)">Authoritative</div>
+      <div style="font-family:var(--font-body);font-size:.8rem;color:#888;margin-top:.35rem">Expert, not arrogant</div>
+    </div>
+    <div style="text-align:center;padding:1.5rem;background:white;border-radius:12px;border:1px solid #e8eaef">
+      <div style="font-family:var(--font-display);font-weight:700;font-size:1.25rem;color:var(--kapix-emerald)">Direct</div>
+      <div style="font-family:var(--font-body);font-size:.8rem;color:#888;margin-top:.35rem">Clear, no filler</div>
+    </div>
+    <div style="text-align:center;padding:1.5rem;background:white;border-radius:12px;border:1px solid #e8eaef">
+      <div style="font-family:var(--font-display);font-weight:700;font-size:1.25rem;color:var(--kapix-emerald)">Forward</div>
+      <div style="font-family:var(--font-body);font-size:.8rem;color:#888;margin-top:.35rem">Future-facing lens</div>
+    </div>
+  </div>
+
+  <div class="voice-grid">
+    <div class="voice-card do">
+      <div class="voice-label">Do This</div>
+      <ul>
+        <li>"12ms average decision latency across all transaction types."</li>
+        <li>"Real-time credit assessment powered by multi-dimensional data fusion."</li>
+        <li>"Our models process 84K transactions per second."</li>
+        <li>"Enterprise-grade fraud detection with explainable outputs."</li>
+      </ul>
+    </div>
+    <div class="voice-card dont">
+      <div class="voice-label">Avoid This</div>
+      <ul>
+        <li>"Revolutionary AI that will change everything!"</li>
+        <li>"We're disrupting the entire financial industry."</li>
+        <li>"Our cutting-edge, next-gen platform leverages synergies."</li>
+        <li>"The most amazing, game-changing solution ever."</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- 07 — KEY BRAND PHRASES                      -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="page" id="s7">
+  <div class="sh">
+    <span class="sh-num">07 — Key Brand Phrases</span>
+    <h2>Signature Messaging</h2>
+    <p>These phrases anchor the Kapix brand narrative. Use them consistently across marketing, product, and communications.</p>
+  </div>
+
+  <div class="phrase-cards">
+    <div class="phrase-card">
+      <blockquote>"AI that sees ahead."</blockquote>
+      <div class="usage">Primary tagline · Hero sections · Brand moments</div>
+    </div>
+    <div class="phrase-card">
+      <blockquote>"Financial intelligence for the world's most demanding decisions."</blockquote>
+      <div class="usage">Value proposition · Sub-headlines · About pages</div>
+    </div>
+    <div class="phrase-card">
+      <blockquote>"Built by experts. Powered by precision."</blockquote>
+      <div class="usage">Team sections · Credibility statements · Footer</div>
+    </div>
+  </div>
+
+  <div style="background:white;border:1px solid #e8eaef;border-radius:14px;padding:2rem;margin-top:2rem">
+    <h4 style="font-family:var(--font-display);font-weight:600;margin-bottom:1rem;font-size:.95rem">Extended Messaging Toolkit</h4>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;font-size:.9rem;color:#555;line-height:1.6">
+      <div><strong style="color:#1a1a2e">Product:</strong> "Decisions in milliseconds. Confidence in every one."</div>
+      <div><strong style="color:#1a1a2e">Trust:</strong> "Where data meets certainty."</div>
+      <div><strong style="color:#1a1a2e">Scale:</strong> "Engineered for billions of decisions a day."</div>
+      <div><strong style="color:#1a1a2e">Innovation:</strong> "The frontier of financial intelligence."</div>
+      <div><strong style="color:#1a1a2e">Security:</strong> "Intelligence you can audit. Decisions you can trust."</div>
+      <div><strong style="color:#1a1a2e">Team:</strong> "Finance minds. AI engineers. One mission."</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- 08 — APPLICATION EXAMPLES                   -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="page" id="s8">
+  <div class="sh">
+    <span class="sh-num">08 — Application Examples</span>
+    <h2>Brand in Context</h2>
+    <p>The following demonstrates how the Kapix identity system applies across digital and print touchpoints.</p>
+  </div>
+
+  <div class="app-grid">
+    <div class="app-card">
+      <div class="app-preview" style="background:var(--kapix-navy);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.75rem;padding:2rem">
+        <svg viewBox="0 0 200 50" fill="none" xmlns="http://www.w3.org/2000/svg" width="180">
+          <line x1="10" y1="8" x2="10" y2="42" stroke="#00D4AA" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="10" y1="25" x2="28" y2="25" stroke="#00D4AA" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="28" y1="25" x2="40" y2="10" stroke="#00D4AA" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="28" y1="25" x2="40" y2="40" stroke="#00D4AA" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="28" cy="25" r="4" fill="#00D4AA"/><circle cx="28" cy="25" r="2" fill="#060A12"/>
+          <text x="54" y="31" font-family="system-ui" font-weight="700" font-size="22" fill="#fff" letter-spacing="-0.5">Kapix</text>
+        </svg>
+        <div style="font-family:var(--font-body);font-size:.65rem;color:var(--kapix-mist);letter-spacing:.04em">AI that sees ahead.</div>
+        <div style="margin-top:.5rem;background:var(--kapix-emerald);color:var(--kapix-navy);font-family:var(--font-display);font-weight:600;font-size:.55rem;padding:.35rem 1rem;border-radius:4px;letter-spacing:.03em">EXPLORE PLATFORM</div>
+      </div>
+      <div class="app-label">Website Hero — Desktop</div>
+    </div>
+
+    <div class="app-card">
+      <div class="app-preview" style="background:#fff;display:flex;align-items:center;justify-content:center;padding:2rem">
+        <div style="width:200px;background:var(--kapix-navy);border-radius:12px;padding:1.25rem;color:white">
+          <div style="font-family:var(--font-mono);font-size:.5rem;color:var(--kapix-mist);letter-spacing:.06em;text-transform:uppercase;margin-bottom:.5rem">Risk Assessment</div>
+          <div style="font-family:var(--font-display);font-size:1.75rem;font-weight:700;color:var(--kapix-emerald)">0.023</div>
+          <div style="font-family:var(--font-mono);font-size:.5rem;color:var(--kapix-emerald);margin-top:.15rem">▼ LOW EXPOSURE</div>
+          <div style="height:3px;background:var(--kapix-steel);border-radius:2px;margin-top:.75rem">
+            <div style="height:100%;width:23%;background:var(--kapix-emerald);border-radius:2px"></div>
+          </div>
+        </div>
+      </div>
+      <div class="app-label">Dashboard Data Card</div>
+    </div>
+
+    <div class="app-card">
+      <div class="app-preview" style="background:var(--kapix-graphite);display:flex;align-items:center;justify-content:center;padding:2rem">
+        <div style="text-align:center;color:white">
+          <div style="font-family:var(--font-body);font-style:italic;font-size:.85rem;color:var(--kapix-silver);max-width:180px;line-height:1.5;margin:0 auto">"Financial intelligence for the world's most demanding decisions."</div>
+          <div style="width:30px;height:1px;background:var(--kapix-emerald);margin:1rem auto"></div>
+          <div style="font-family:var(--font-display);font-weight:600;font-size:.6rem;letter-spacing:.1em;color:var(--kapix-mist);text-transform:uppercase">Kapix</div>
+        </div>
+      </div>
+      <div class="app-label">Social Media — Quote Card</div>
+    </div>
+
+    <div class="app-card">
+      <div class="app-preview" style="background:white;display:flex;align-items:center;justify-content:center;padding:1.5rem">
+        <div style="width:200px">
+          <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:1rem">
+            <svg viewBox="0 0 28 28" fill="none" width="20" height="20">
+              <line x1="6" y1="4" x2="6" y2="24" stroke="#060A12" stroke-width="2" stroke-linecap="round"/>
+              <line x1="6" y1="14" x2="14" y2="14" stroke="#060A12" stroke-width="2" stroke-linecap="round"/>
+              <line x1="14" y1="14" x2="22" y2="5" stroke="#060A12" stroke-width="2" stroke-linecap="round"/>
+              <line x1="14" y1="14" x2="22" y2="23" stroke="#060A12" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="14" cy="14" r="3" fill="#00D4AA"/>
+            </svg>
+            <span style="font-family:var(--font-display);font-weight:700;font-size:.85rem;color:#060A12;letter-spacing:-.01em">Kapix</span>
+          </div>
+          <div style="font-family:var(--font-display);font-weight:600;font-size:.7rem;color:#333;line-height:1.4">Ugbefu Andrew</div>
+          <div style="font-family:var(--font-body);font-size:.55rem;color:#888;margin-top:.1rem">Chief Executive Officer</div>
+          <div style="height:1px;background:#eee;margin:.75rem 0"></div>
+          <div style="font-family:var(--font-mono);font-size:.45rem;color:#aaa;line-height:1.8">
+            andrew@kapix.ai<br>+234 800 000 0000<br>kapix.ai
+          </div>
+        </div>
+      </div>
+      <div class="app-label">Business Card — Front</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<div class="divider"></div>
+<section style="text-align:center;padding:4rem 2rem;color:var(--kapix-mist)">
+  <div style="font-family:var(--font-display);font-weight:700;font-size:1.25rem;color:#1a1a2e;margin-bottom:.5rem">Kapix</div>
+  <div style="font-family:var(--font-mono);font-size:.7rem;letter-spacing:.04em">Brand Design System v1.0 — March 2026</div>
+  <div style="font-family:var(--font-body);font-size:.8rem;margin-top:.5rem">Confidential. For internal and approved partner use only.</div>
+</section>
+
+</body>
+</html>
