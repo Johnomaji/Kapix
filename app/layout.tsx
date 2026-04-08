@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
-import { Anybody, Newsreader, JetBrains_Mono } from "next/font/google";
+import { Anybody, Newsreader, JetBrains_Mono, Geist } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 const anybody = Anybody({
   variable: "--font-anybody",
@@ -37,7 +40,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${anybody.variable} ${newsreader.variable} ${jetbrainsMono.variable}`}
+      className={cn(anybody.variable, newsreader.variable, jetbrainsMono.variable, "font-sans", geist.variable)}
     >
       <body className="min-h-full">
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
