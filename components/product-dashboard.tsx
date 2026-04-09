@@ -3,6 +3,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis } from "recharts";
 import { LayoutDashboard, CreditCard, Shield, TrendingUp, ArrowUpRight, ArrowDownRight, Activity, Bell, Search, AlertTriangle, CheckCircle, XCircle, Zap, Target, ArrowRight, Copy, Check, Menu, ChevronRight, ChevronDown, Cpu, Server, Wifi, Lock, Globe, Code, Eye, EyeOff, X, Filter, RefreshCw, Download, Settings, LogOut, HelpCircle, FileText, Hash, PieChart as PieIcon, Users, Clock, MapPin, Smartphone, Building, Fingerprint, CreditCard as CardIcon, Wallet, Send } from "lucide-react";
 
@@ -231,7 +232,7 @@ const NAV=[
   {id:"api",label:"API Console",icon:Code,desc:"Developer tools"},
 ];
 
-const Side = ({active,onNav,col,onCol}) => (
+const Side = ({active,onNav,col,onCol,onLogout,onHome}) => (
   <aside style={{width:col?60:244,height:"100vh",background:T.gr,borderRight:`1px solid ${T.st}`,display:"flex",flexDirection:"column",transition:"width 0.3s cubic-bezier(0.16,1,0.3,1)",flexShrink:0,overflow:"hidden",zIndex:10}}>
     <div style={{padding:col?"16px 8px":"16px 16px",display:"flex",alignItems:"center",gap:10,borderBottom:`1px solid ${T.st}`,minHeight:60}}>
       <svg viewBox="0 0 120 120" fill="none" style={{width:26,height:26,flexShrink:0}}>
@@ -263,7 +264,15 @@ const Side = ({active,onNav,col,onCol}) => (
       {!col&&<div style={{fontFamily:"var(--mono)",fontSize:9,color:T.gh,marginBottom:8,display:"flex",alignItems:"center",gap:5}}>
         <kbd style={{background:T.st,padding:"1px 5px",borderRadius:3,fontSize:9}}>⌘K</kbd> Command Palette
       </div>}
-      <button onClick={onCol} style={{background:"none",border:"none",color:T.gh,cursor:"pointer",display:"flex",alignItems:"center",gap:7,fontFamily:"var(--mono)",fontSize:10,width:"100%",justifyContent:col?"center":"flex-start",padding:"4px 0",transition:"color 0.2s"}}
+      <button onClick={onHome} style={{background:"none",border:"none",color:T.gh,cursor:"pointer",display:"flex",alignItems:"center",gap:7,fontFamily:"var(--mono)",fontSize:10,width:"100%",justifyContent:col?"center":"flex-start",padding:"5px 0",transition:"color 0.2s"}}
+        onMouseEnter={e=>e.currentTarget.style.color=T.mi} onMouseLeave={e=>e.currentTarget.style.color=T.gh}>
+        <Globe size={14}/>{!col&&"Back to Home"}
+      </button>
+      <button onClick={onLogout} style={{background:"none",border:"none",color:T.rd,cursor:"pointer",display:"flex",alignItems:"center",gap:7,fontFamily:"var(--mono)",fontSize:10,width:"100%",justifyContent:col?"center":"flex-start",padding:"5px 0",transition:"all 0.2s",opacity:0.75}}
+        onMouseEnter={e=>{e.currentTarget.style.opacity="1";}} onMouseLeave={e=>{e.currentTarget.style.opacity="0.75";}}>
+        <LogOut size={14}/>{!col&&"Log out"}
+      </button>
+      <button onClick={onCol} style={{background:"none",border:"none",color:T.gh,cursor:"pointer",display:"flex",alignItems:"center",gap:7,fontFamily:"var(--mono)",fontSize:10,width:"100%",justifyContent:col?"center":"flex-start",padding:"4px 0",transition:"color 0.2s",marginTop:4}}
         onMouseEnter={e=>e.currentTarget.style.color=T.mi} onMouseLeave={e=>e.currentTarget.style.color=T.gh}>
         <Menu size={14} style={{transition:"transform 0.3s",transform:col?"rotate(90deg)":"none"}}/>{!col&&"Collapse sidebar"}
       </button>
@@ -274,7 +283,7 @@ const Side = ({active,onNav,col,onCol}) => (
 /* ═══════════════════════════════════════
    TOP BAR
    ═══════════════════════════════════════ */
-const TopBar = ({page,onCmd,toastCount}) => {
+const TopBar = ({page,onCmd,toastCount,user,onLogout}) => {
   const [nOpen,setN]=useState(false);
   const now=useTime();
   const titles={dash:"Dashboard",score:"Credit Scoring Engine",fraud:"Fraud Detection Centre",risk:"Risk Assessment Engine",txns:"Transaction Monitor",api:"API Console"};
@@ -318,10 +327,14 @@ const TopBar = ({page,onCmd,toastCount}) => {
         </div>}
       </div>
       <div style={{width:1,height:22,background:T.st,margin:"0 4px"}}/>
-      <div style={{display:"flex",alignItems:"center",gap:7,cursor:"pointer",padding:"3px 7px",borderRadius:8,transition:"background 0.2s"}}
-        onMouseEnter={e=>e.currentTarget.style.background=T.sl} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
-        <div style={{width:28,height:28,borderRadius:"50%",background:T.emD,border:`2px solid ${T.emB}`,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"var(--head)",fontWeight:700,fontSize:10,color:T.em}}>UA</div>
-        <div><div style={{fontFamily:"var(--head)",fontSize:11,fontWeight:600,color:"#fff"}}>Ugbefu Andrew</div><div style={{fontFamily:"var(--mono)",fontSize:8,color:T.gh}}>CEO · ADMIN</div></div>
+      <div style={{display:"flex",alignItems:"center",gap:7,cursor:"default",padding:"3px 7px",borderRadius:8}}>
+        <div style={{width:28,height:28,borderRadius:"50%",background:T.emD,border:`2px solid ${T.emB}`,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"var(--head)",fontWeight:700,fontSize:10,color:T.em}}>
+          {user?.name?.split(" ").map(w=>w[0]).join("").slice(0,2)||"UA"}
+        </div>
+        <div>
+          <div style={{fontFamily:"var(--head)",fontSize:11,fontWeight:600,color:"#fff"}}>{user?.name||"Ugbefu Andrew"}</div>
+          <div style={{fontFamily:"var(--mono)",fontSize:8,color:T.gh}}>{user?.role||"CEO"} · ADMIN</div>
+        </div>
       </div>
     </div>
   </header>;
@@ -910,14 +923,18 @@ const APIPage = ({addToast}) => {
    MAIN APP SHELL
    ═══════════════════════════════════════ */
 export default function KapixNG() {
+  const router=useRouter();
   const [page,setPage]=useState("dash");
   const [col,setCol]=useState(false);
   const [pageKey,setPK]=useState(0);
   const [cmdOpen,setCmd]=useState(false);
   const [toasts,setToasts]=useState([]);
+  const [user,setUser]=useState(null);
   const addToast=useCallback((t)=>{const id=Date.now();setToasts(v=>[...v,{...t,id}]);setTimeout(()=>setToasts(v=>v.filter(x=>x.id!==id)),4000);},[]);
   const dismiss=useCallback((id)=>setToasts(v=>v.filter(x=>x.id!==id)),[]);
   const nav=(p)=>{setPage(p);setPK(k=>k+1);};
+  useEffect(()=>{const auth=localStorage.getItem("kapix_auth");if(auth)setUser(JSON.parse(auth));},[]);
+  const handleLogout=()=>{localStorage.removeItem("kapix_auth");router.push("/login");};
 
   useEffect(()=>{
     const h=(e)=>{if((e.metaKey||e.ctrlKey)&&e.key==="k"){e.preventDefault();setCmd(v=>!v);}if(e.key==="Escape")setCmd(false);};
@@ -928,8 +945,7 @@ export default function KapixNG() {
   const P=pages[page];
   return <div style={{display:"flex",height:"100vh",background:T.nv,color:"#fff",fontFamily:"var(--body)"}}>
     <style>{`
-      @import url('https://fonts.googleapis.com/css2?family=Anybody:wght@300;400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600&family=JetBrains+Mono:wght@400;500;600&display=swap');
-      :root{--head:'Anybody',sans-serif;--body:'Newsreader',Georgia,serif;--mono:'JetBrains Mono',monospace;}
+      :root{--head:var(--font-jakarta),'Plus Jakarta Sans',sans-serif;--body:var(--font-dm),'DM Sans',system-ui,sans-serif;--mono:var(--font-jetbrains),'JetBrains Mono',monospace;}
       *{box-sizing:border-box;}
       ::-webkit-scrollbar{width:5px;height:5px;}
       ::-webkit-scrollbar-track{background:transparent;}
@@ -950,9 +966,9 @@ export default function KapixNG() {
       @keyframes cmdIn{from{opacity:0;transform:translateY(-12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
       @keyframes toastIn{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:translateX(0)}}
     `}</style>
-    <Side active={page} onNav={nav} col={col} onCol={()=>setCol(!col)}/>
+    <Side active={page} onNav={nav} col={col} onCol={()=>setCol(!col)} onLogout={handleLogout} onHome={()=>router.push("/")}/>
     <div style={{flex:1,display:"flex",flexDirection:"column",overflow:"hidden"}}>
-      <TopBar page={page} onCmd={()=>setCmd(true)} toastCount={ALERTS.length}/>
+      <TopBar page={page} onCmd={()=>setCmd(true)} toastCount={ALERTS.length} user={user} onLogout={handleLogout}/>
       <main key={pageKey} style={{flex:1,overflow:"auto",padding:20,animation:"pageEnter 0.4s cubic-bezier(0.16,1,0.3,1)"}}>
         <P addToast={addToast}/>
       </main>

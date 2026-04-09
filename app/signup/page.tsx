@@ -205,7 +205,7 @@ export default function SignupPage() {
               <a href="#" className="text-[var(--kapix-emerald)] hover:underline">Privacy Policy</a>.
             </p>
 
-            <Button type="submit" className="w-full" size="md" disabled={loading}>
+            <Button type="submit" className="w-full" size="lg" disabled={loading}>
               {loading ? "Creating account…" : "Create Account"}
             </Button>
           </form>

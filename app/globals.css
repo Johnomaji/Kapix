@@ -2,9 +2,8 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-@custom-variant dark (&:is(.dark *));
-
 /* ─── Dark mode via next-themes class strategy ─── */
+@custom-variant dark (&:is(.dark *));
 @variant dark (&:where(.dark, .dark *));
 
 /* ─── Brand Tokens ─── */
@@ -30,9 +29,13 @@
   --surface: #FFFFFF;
   --surface-2: #EEF1F7;
   --border-color: #DDE0E8;
+  --background: #F5F7FA;
+  --foreground: #060A12;
+  /* Light mode text — dark enough to read on light backgrounds */
+  --kapix-silver: #1A2140;
+  --kapix-mist: #2E3858;
+  --kapix-ghost: #1A2240;
   --muted: oklch(0.97 0 0);
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
@@ -65,11 +68,14 @@
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
+  --background: #060A12;
+  --foreground: #FFFFFF;
   --surface: #0C1019;
   --surface-2: #161C2A;
   --border-color: rgba(255, 255, 255, 0.06);
+  /* Restore original mist/ghost for dark mode */
+  --kapix-mist: #8891A5;
+  --kapix-ghost: #4A5268;
   --muted: oklch(0.269 0 0);
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
@@ -118,11 +124,10 @@
   --color-steel: var(--kapix-steel);
   --color-silver: var(--kapix-silver);
   --color-ghost: var(--kapix-ghost);
-  --font-display: var(--font-anybody);
-  --font-body: var(--font-newsreader);
+  --font-display: var(--font-jakarta);
+  --font-body: var(--font-dm);
   --font-code: var(--font-jetbrains);
-  --font-heading: var(--font-sans);
-  --font-sans: var(--font-sans);
+  --font-sans: var(--font-dm);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -164,7 +169,7 @@ html {
 }
 
 body {
-  font-family: var(--font-newsreader), Georgia, serif;
+  font-family: var(--font-dm), 'DM Sans', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
@@ -224,7 +229,323 @@ body {
   body {
     @apply bg-background text-foreground;
   }
-  html {
-    @apply font-sans;
-  }
+}
+
+/* ─── Extended Animations ─── */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-10px); }
+}
+
+@keyframes chipFloat1 {
+  0%, 100% { transform: translateY(0px) rotate(-1.5deg); }
+  50%       { transform: translateY(-9px) rotate(1.5deg); }
+}
+
+@keyframes chipFloat2 {
+  0%, 100% { transform: translateY(0px) rotate(1deg); }
+  50%       { transform: translateY(-7px) rotate(-2deg); }
+}
+
+@keyframes teamReveal {
+  from { opacity: 0; transform: translateY(38px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes shimmerSlide {
+  0%   { transform: translateX(-160%) skewX(-20deg); }
+  100% { transform: translateX(420%) skewX(-20deg); }
+}
+
+@keyframes glowBreath {
+  0%, 100% { opacity: 0.4; }
+  50%       { opacity: 0.85; }
+}
+
+/* ─── Hero Dashboard Card ─── */
+.hero-dashboard-card {
+  background: var(--surface);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  overflow: hidden;
+  animation: float 7s ease-in-out infinite;
+  box-shadow:
+    0 32px 80px rgba(0,0,0,0.35),
+    0 0 0 1px rgba(0,212,170,0.06),
+    0 0 60px rgba(0,212,170,0.04);
+}
+
+.hero-dash-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.875rem 1.25rem;
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.hero-metric-mini {
+  background: var(--surface-2);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 0.875rem 1rem;
+  transition: border-color 0.2s;
+}
+.hero-metric-mini:hover { border-color: rgba(0,212,170,0.22); }
+
+.hero-sparkline-box {
+  background: var(--surface-2);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 0.875rem 1rem;
+  margin-top: 0.75rem;
+}
+
+/* ─── Hero Floating Chips ─── */
+.hero-chip {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px;
+  border-radius: 100px;
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 0.6rem;
+  font-weight: 500;
+  color: var(--kapix-silver);
+  white-space: nowrap;
+  z-index: 3;
+  backdrop-filter: blur(20px);
+  background: color-mix(in srgb, var(--surface) 85%, transparent);
+  border: 1px solid rgba(0,212,170,0.24);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.05);
+}
+.hero-chip-1 { animation: chipFloat1 5s ease-in-out infinite; }
+.hero-chip-2 { animation: chipFloat2 6.5s ease-in-out infinite 0.8s; }
+.hero-chip-3 { animation: chipFloat1 4.5s ease-in-out infinite 1.4s; }
+
+.hero-chip-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--kapix-emerald);
+  flex-shrink: 0;
+  animation: blink 2.5s ease-in-out infinite;
+}
+
+/* ─── Team Photo Cards ─── */
+.team-photo-card {
+  position: relative;
+  border-radius: 22px;
+  overflow: hidden;
+  cursor: pointer;
+  animation: teamReveal 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  background: var(--surface);
+  border: 1px solid var(--border-color);
+  transition:
+    transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.45s ease,
+    border-color 0.45s ease;
+}
+.team-photo-card:hover {
+  transform: translateY(-10px) scale(1.012);
+  border-color: rgba(0,212,170,0.5);
+  box-shadow:
+    0 24px 60px rgba(0,0,0,0.4),
+    0 0 0 1px rgba(0,212,170,0.5),
+    0 0 18px rgba(0,212,170,0.28),
+    0 0 50px rgba(0,212,170,0.12),
+    inset 0 0 0 1px rgba(0,212,170,0.08);
+}
+
+.team-photo-wrap {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+}
+
+.team-photo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+  transition:
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.4s ease;
+  filter: grayscale(20%) brightness(0.9);
+}
+.team-photo-card:hover .team-photo-img {
+  transform: scale(1.07);
+  filter: grayscale(0%) brightness(1.02);
+}
+
+.team-photo-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 30%,
+    rgba(6,10,18,0.55) 65%,
+    rgba(6,10,18,0.97) 100%
+  );
+}
+
+.team-card-info {
+  padding: 1.2rem 1.4rem 1.5rem;
+  background: var(--surface);
+  position: relative;
+}
+.team-card-info::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 1.4rem;
+  right: 1.4rem;
+  height: 1px;
+  background: linear-gradient(90deg, var(--kapix-emerald), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.35s;
+}
+.team-photo-card:hover .team-card-info::before { opacity: 0.65; }
+
+.team-card-name {
+  font-family: var(--font-jakarta);
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--foreground);
+  letter-spacing: -0.015em;
+}
+
+.team-card-role {
+  font-size: 0.775rem;
+  color: var(--kapix-emerald);
+  margin-top: 0.2rem;
+  font-family: var(--font-dm);
+  font-weight: 500;
+}
+
+/* Shimmer sweep on hover */
+.team-photo-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 33%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,0.05),
+    transparent
+  );
+  transform: translateX(-200%) skewX(-20deg);
+  z-index: 4;
+  pointer-events: none;
+}
+.team-photo-card:hover::before {
+  animation: shimmerSlide 0.9s ease forwards;
+}
+
+/* Team background orbs */
+.team-bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(70px);
+}
+.team-bg-orb-1 {
+  width: 600px; height: 600px;
+  top: -200px; right: -50px;
+  background: radial-gradient(circle, rgba(0,212,170,0.045) 0%, transparent 70%);
+  animation: glowBreath 9s ease-in-out infinite;
+}
+.team-bg-orb-2 {
+  width: 500px; height: 500px;
+  bottom: -180px; left: -80px;
+  background: radial-gradient(circle, rgba(37,99,235,0.045) 0%, transparent 70%);
+  animation: glowBreath 11s ease-in-out infinite 3s;
+}
+
+/* ─── Metric band cells ─── */
+.metric-cell {
+  position: relative;
+  padding: 2.75rem 2rem;
+  text-align: center;
+  transition: background 0.25s;
+}
+.metric-cell:hover { background: rgba(0,212,170,0.025); }
+
+.metric-accent-bar {
+  width: 24px; height: 3px;
+  background: var(--kapix-emerald);
+  border-radius: 2px;
+  margin: 0.7rem auto 0;
+  transition: width 0.3s ease;
+}
+.metric-cell:hover .metric-accent-bar { width: 52px; }
+
+/* ─── Capability card top-line ─── */
+.cap-top-line {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--kapix-emerald), var(--kapix-blue));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s ease;
+}
+.group:hover .cap-top-line { transform: scaleX(1); }
+
+/* ─── Architecture icon badge ─── */
+.arch-icon-badge {
+  width: 50px; height: 50px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  background: linear-gradient(135deg, rgba(0,212,170,0.1), rgba(37,99,235,0.08));
+  border: 1px solid rgba(0,212,170,0.14);
+  margin-bottom: 1.1rem;
+  transition: background 0.3s, border-color 0.3s;
+}
+.arch-item:hover .arch-icon-badge {
+  background: linear-gradient(135deg, rgba(0,212,170,0.16), rgba(37,99,235,0.12));
+  border-color: rgba(0,212,170,0.26);
+}
+
+/* ─── Section label pill ─── */
+.section-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 14px;
+  border-radius: 100px;
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 0.6rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--kapix-emerald);
+  background: rgba(0,212,170,0.08);
+  border: 1px solid rgba(0,212,170,0.16);
+}
+.section-pill-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--kapix-emerald);
+  animation: blink 3s ease-in-out infinite;
+}
+
+/* ─── CTA glow ring ─── */
+.cta-glow-ring {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px; height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(0,212,170,0.07) 0%, rgba(37,99,235,0.04) 40%, transparent 70%);
+  filter: blur(50px);
+  pointer-events: none;
 }

@@ -1,22 +1,19 @@
 import type { Metadata } from "next";
-import { Anybody, Newsreader, JetBrains_Mono, Geist } from "next/font/google";
+import { Plus_Jakarta_Sans, DM_Sans, JetBrains_Mono } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
-
-const anybody = Anybody({
-  variable: "--font-anybody",
+const plusJakartaSans = Plus_Jakarta_Sans({
+  variable: "--font-jakarta",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
-const newsreader = Newsreader({
-  variable: "--font-newsreader",
+const dmSans = DM_Sans({
+  variable: "--font-dm",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
-  style: ["normal", "italic"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 const jetbrainsMono = JetBrains_Mono({
@@ -40,7 +37,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn(anybody.variable, newsreader.variable, jetbrainsMono.variable, "font-sans", geist.variable)}
+      className={cn(plusJakartaSans.variable, dmSans.variable, jetbrainsMono.variable)}
     >
       <body className="min-h-full">
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>

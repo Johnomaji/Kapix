@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import KapixNG from "@/components/product-dashboard";
+import ProductPageWrapper from "@/components/product-page-wrapper";
 
 export const metadata: Metadata = {
   title: "Kapix Platform — Live Intelligence Dashboard",
@@ -7,5 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function ProductPage() {
-  return <KapixNG />;
+  return <ProductPageWrapper />;
 }
