@@ -175,10 +175,10 @@ export function Nav() {
 
           <div className="mt-auto pt-8 flex items-center justify-between">
             <a
-              href="mailto:ugbefu@usekapix.com"
+              href="mailto:contact@usekapix.com"
               className="font-mono text-[0.62rem] tracking-wider text-[var(--kapix-ghost)] hover:text-[var(--kapix-emerald)] transition-colors"
             >
-              ugbefu@usekapix.com
+              contact@usekapix.com
             </a>
             <a
               href="https://usekapix.com"

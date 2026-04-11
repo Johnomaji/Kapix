@@ -39,7 +39,7 @@ export default function RootLayout({
       suppressHydrationWarning
       className={cn(plusJakartaSans.variable, dmSans.variable, jetbrainsMono.variable)}
     >
-      <body className="min-h-full">
+      <body className="min-h-full" suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           {children}
         </ThemeProvider>

@@ -7,13 +7,13 @@ const footerLinks: Record<string, { label: string; href: string }[]> = {
     { label: "Fraud Detection",     href: "/#platform" },
     { label: "Risk Assessment",     href: "/#platform" },
     { label: "Decision Automation", href: "/#platform" },
-    { label: "API Reference",       href: "https://usekapix.com/docs" },
+    { label: "API Reference",       href: "/docs" },
   ],
   Company: [
     { label: "About",    href: "/#team" },
     { label: "Team",     href: "/#team" },
-    { label: "Careers",  href: "mailto:ugbefu@usekapix.com?subject=Careers%20at%20Kapix" },
-    { label: "Press",    href: "mailto:ugbefu@usekapix.com?subject=Press%20Inquiry" },
+    { label: "Careers",  href: "mailto:contact@usekapix.com?subject=Careers%20at%20Kapix" },
+    { label: "Press",    href: "mailto:contact@usekapix.com?subject=Press%20Inquiry" },
     { label: "Blog",     href: "https://usekapix.com/blog" },
   ],
   Legal: [
@@ -46,13 +46,13 @@ export function Footer() {
           {/* Contact */}
           <div className="mt-6 flex flex-col gap-2">
             <a
-              href="mailto:ugbefu@usekapix.com"
+              href="mailto:contact@usekapix.com"
               className="inline-flex items-center gap-2 font-mono text-[0.65rem] tracking-wide text-[var(--kapix-ghost)] transition-colors hover:text-[var(--kapix-emerald)]"
             >
               <svg viewBox="0 0 16 16" className="h-3 w-3 flex-shrink-0 fill-current opacity-60">
                 <path d="M2 4a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V4zm2-1a1 1 0 00-1 1v.217l5 3.125 5-3.125V4a1 1 0 00-1-1H4zm9 2.383L8 8.42 3 5.383V12a1 1 0 001 1h8a1 1 0 001-1V5.383z" />
               </svg>
-              ugbefu@usekapix.com
+              contact@usekapix.com
             </a>
             <a
               href="https://usekapix.com"

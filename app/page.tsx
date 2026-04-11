@@ -171,8 +171,8 @@ export default function Home() {
               </p>
 
               <div className="mt-10 flex flex-wrap gap-3">
-                <Button size="lg">Explore the Platform</Button>
-                <Button variant="ghost" size="lg">Read Documentation</Button>
+                <Button size="lg" render={<a href="#platform" />}>Explore the Platform</Button>
+                <Button variant="ghost" size="lg" render={<Link href="/docs" />}>Read Documentation</Button>
               </div>
 
               <div
